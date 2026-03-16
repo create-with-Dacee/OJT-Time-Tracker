@@ -479,10 +479,9 @@
     </div>
 
     <script>
-        // ==================== SUPABASE CONFIGURATION ====================
-        // YOU NEED TO CREATE A FREE SUPABASE PROJECT AND REPLACE THESE VALUES
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Get from: https://app.supabase.com -> Project Settings -> API
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Get from same place
+       // ==================== SUPABASE CONFIGURATION ====================
+const SUPABASE_URL = 'https://your-project-id.supabase.co'; // Your actual URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Your actual key
         
         // Initialize Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
