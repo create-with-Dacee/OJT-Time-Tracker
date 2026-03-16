@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OJT Time Tracker - With Login</title>
+    <title>OJT Time Tracker - With AM/PM Sessions</title>
     <style>
         * {
             margin: 0;
@@ -18,7 +18,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Login Page Styles */
+        /* Login Page Styles (same as before) */
         .login-container {
             max-width: 400px;
             margin: 50px auto;
@@ -95,7 +95,7 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -104,7 +104,7 @@
             transition: all 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -298,7 +298,7 @@
             font-weight: 600;
         }
 
-        /* Form Section */
+        /* Form Section - UPDATED with AM/PM */
         .form-section {
             background: white;
             border-radius: 15px;
@@ -310,6 +310,13 @@
         .form-section h2 {
             color: #333;
             margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            color: #555;
+            margin: 20px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .time-form {
@@ -329,6 +336,11 @@
             font-weight: 500;
         }
 
+        .form-group label i {
+            color: #667eea;
+            margin-right: 5px;
+        }
+
         .form-group input, .form-group select, .form-group textarea {
             padding: 10px;
             border: 2px solid #e0e0e0;
@@ -344,6 +356,56 @@
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
+        }
+
+        .session-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .session-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .session-title span {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+        }
+
+        .time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .total-hours-display {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            grid-column: span 2;
+        }
+
+        .total-hours-display .big-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .total-hours-display .label {
+            color: #666;
+            margin-top: 5px;
         }
 
         .btn {
@@ -445,7 +507,7 @@
             font-size: 0.9em;
         }
 
-        /* Table Section */
+        /* Table Section - UPDATED with AM/PM columns */
         .table-section {
             background: white;
             border-radius: 15px;
@@ -488,6 +550,7 @@
             color: #333;
             font-weight: 600;
             cursor: pointer;
+            font-size: 0.9em;
         }
 
         th:hover {
@@ -498,10 +561,21 @@
             padding: 12px;
             border-bottom: 1px solid #e0e0e0;
             color: #555;
+            font-size: 0.9em;
         }
 
         tr:hover {
             background: #f8f9fa;
+        }
+
+        .morning-badge {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .afternoon-badge {
+            color: #fd7e14;
+            font-weight: 500;
         }
 
         .action-btn {
@@ -548,23 +622,6 @@
             min-width: 200px;
         }
 
-        .date-range {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .date-range input {
-            padding: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .login-container {
@@ -584,6 +641,10 @@
             .summary-stats {
                 flex-direction: column;
                 gap: 15px;
+            }
+            
+            .time-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -679,28 +740,68 @@
             </div>
         </div>
 
-        <!-- Form Section -->
+        <!-- Form Section - UPDATED with AM/PM -->
         <div class="form-section">
             <h2>➕ Log New Hours</h2>
             <form class="time-form" id="timeForm" onsubmit="addEntry(event)">
-                <div class="form-group">
-                    <label>Trainee Name:</label>
+                <!-- Basic Info -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label><i>👤</i> Trainee Name:</label>
                     <input type="text" id="traineeName" required>
                 </div>
+                
                 <div class="form-group">
-                    <label>Date:</label>
+                    <label><i>📅</i> Date:</label>
                     <input type="date" id="date" required>
                 </div>
-                <div class="form-group">
-                    <label>Time In:</label>
-                    <input type="time" id="timeIn" required>
+
+                <!-- Morning Session -->
+                <div style="grid-column: span 2;">
+                    <div class="session-box">
+                        <div class="session-title">
+                            <span>🌅 MORNING SESSION</span>
+                        </div>
+                        <div class="time-row">
+                            <div class="form-group">
+                                <label>Time In (AM):</label>
+                                <input type="time" id="morningIn" required value="08:00">
+                            </div>
+                            <div class="form-group">
+                                <label>Time Out (AM):</label>
+                                <input type="time" id="morningOut" required value="12:00">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Time Out:</label>
-                    <input type="time" id="timeOut" required>
+
+                <!-- Afternoon Session -->
+                <div style="grid-column: span 2;">
+                    <div class="session-box">
+                        <div class="session-title">
+                            <span>☀️ AFTERNOON SESSION</span>
+                        </div>
+                        <div class="time-row">
+                            <div class="form-group">
+                                <label>Time In (PM):</label>
+                                <input type="time" id="afternoonIn" required value="13:00">
+                            </div>
+                            <div class="form-group">
+                                <label>Time Out (PM):</label>
+                                <input type="time" id="afternoonOut" required value="17:00">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Total Hours Display -->
+                <div class="total-hours-display">
+                    <div class="big-number" id="totalHoursPreview">8.0</div>
+                    <div class="label">Total Hours for the Day</div>
+                </div>
+
+                <!-- Other Details -->
                 <div class="form-group">
-                    <label>Department:</label>
+                    <label><i>🏢</i> Department:</label>
                     <div class="department-toggle">
                         <div class="dept-option active" onclick="toggleDeptMode('select')">Select</div>
                         <div class="dept-option" onclick="toggleDeptMode('custom')">Custom</div>
@@ -716,25 +817,31 @@
                             <option value="Operations">⚡ Operations</option>
                             <option value="Sales">💼 Sales</option>
                             <option value="Engineering">⚙️ Engineering</option>
+                            <option value="Administration">📋 Administration</option>
+                            <option value="Customer Service">💬 Customer Service</option>
                         </select>
                     </div>
                     <div id="deptCustom" class="custom-dept-input">
                         <input type="text" id="customDepartment" placeholder="Type department...">
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label>Supervisor:</label>
+                    <label><i>👔</i> Supervisor:</label>
                     <input type="text" id="supervisor" required>
                 </div>
+
                 <div class="form-group" style="grid-column: span 2;">
-                    <label>Tasks Performed:</label>
+                    <label><i>📝</i> Tasks Performed:</label>
                     <textarea id="tasks" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Remarks:</label>
+
+                <div class="form-group" style="grid-column: span 2;">
+                    <label><i>💬</i> Remarks:</label>
                     <input type="text" id="remarks">
                 </div>
-                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+
+                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end; grid-column: span 2;">
                     <button type="submit" class="btn">Save Entry</button>
                     <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
                 </div>
@@ -794,7 +901,7 @@
             </div>
         </div>
 
-        <!-- Table Section -->
+        <!-- Table Section - UPDATED with AM/PM columns -->
         <div class="table-section">
             <div class="table-header">
                 <h2>📋 Time Entries</h2>
@@ -810,10 +917,10 @@
                     <tr>
                         <th onclick="sortTable(0)">Trainee ⬍</th>
                         <th onclick="sortTable(1)">Date ⬍</th>
-                        <th onclick="sortTable(2)">Time In ⬍</th>
-                        <th onclick="sortTable(3)">Time Out ⬍</th>
-                        <th onclick="sortTable(4)">Hours ⬍</th>
-                        <th onclick="sortTable(5)">Department ⬍</th>
+                        <th>🌅 Morning</th>
+                        <th>☀️ Afternoon</th>
+                        <th onclick="sortTable(2)">Total Hrs ⬍</th>
+                        <th onclick="sortTable(3)">Dept ⬍</th>
                         <th>Supervisor</th>
                         <th>Tasks</th>
                         <th>Remarks</th>
@@ -834,8 +941,6 @@
 
     <script>
         // ==================== AUTHENTICATION SYSTEM ====================
-        // This uses localStorage - NO SUPABASE NEEDED!
-        
         let currentUser = null;
         let entries = [];
 
@@ -843,7 +948,45 @@
         window.onload = function() {
             checkLoggedInUser();
             setDefaultDate();
+            setupTimeListeners();
         };
+
+        function setupTimeListeners() {
+            // Update total hours preview when any time changes
+            ['morningIn', 'morningOut', 'afternoonIn', 'afternoonOut'].forEach(id => {
+                document.getElementById(id).addEventListener('change', updateTotalPreview);
+            });
+        }
+
+        function calculateSessionHours(timeIn, timeOut) {
+            if (!timeIn || !timeOut) return 0;
+            
+            const [inHours, inMinutes] = timeIn.split(':').map(Number);
+            const [outHours, outMinutes] = timeOut.split(':').map(Number);
+            
+            let hours = outHours - inHours;
+            let minutes = outMinutes - inMinutes;
+            
+            if (minutes < 0) {
+                hours--;
+                minutes += 60;
+            }
+            
+            return hours + (minutes / 60);
+        }
+
+        function updateTotalPreview() {
+            const morningIn = document.getElementById('morningIn').value;
+            const morningOut = document.getElementById('morningOut').value;
+            const afternoonIn = document.getElementById('afternoonIn').value;
+            const afternoonOut = document.getElementById('afternoonOut').value;
+            
+            const morningHours = calculateSessionHours(morningIn, morningOut);
+            const afternoonHours = calculateSessionHours(afternoonIn, afternoonOut);
+            const total = morningHours + afternoonHours;
+            
+            document.getElementById('totalHoursPreview').textContent = total.toFixed(1);
+        }
 
         function checkLoggedInUser() {
             const savedUser = localStorage.getItem('ojt_current_user');
@@ -864,10 +1007,8 @@
             const password = document.getElementById('loginPassword').value;
             const errorElement = document.getElementById('loginError');
             
-            // Get users from localStorage
             const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
             
-            // Find user
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
@@ -877,13 +1018,9 @@
                     email: user.email
                 };
                 
-                // Save current session
                 localStorage.setItem('ojt_current_user', JSON.stringify(currentUser));
                 
-                // Load user data
                 loadUserData();
-                
-                // Show app
                 showApp();
                 errorElement.classList.remove('show');
             } else {
@@ -903,7 +1040,6 @@
             const errorElement = document.getElementById('signupError');
             const successElement = document.getElementById('signupSuccess');
             
-            // Validate passwords match
             if (password !== confirm) {
                 errorElement.textContent = 'Passwords do not match';
                 errorElement.classList.add('show');
@@ -911,10 +1047,8 @@
                 return;
             }
             
-            // Get existing users
             const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
             
-            // Check if email already exists
             if (users.some(u => u.email === email)) {
                 errorElement.textContent = 'Email already registered';
                 errorElement.classList.add('show');
@@ -922,7 +1056,6 @@
                 return;
             }
             
-            // Create new user
             const newUser = {
                 id: Date.now().toString(),
                 name: name,
@@ -934,18 +1067,15 @@
             users.push(newUser);
             localStorage.setItem('ojt_users', JSON.stringify(users));
             
-            // Show success message
             successElement.textContent = 'Account created! You can now login.';
             successElement.classList.add('show');
             errorElement.classList.remove('show');
             
-            // Clear form
             document.getElementById('signupName').value = '';
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
             document.getElementById('signupConfirm').value = '';
             
-            // Switch to login tab after 2 seconds
             setTimeout(() => {
                 switchTab('login');
                 successElement.classList.remove('show');
@@ -1049,28 +1179,33 @@
             }
         }
 
-        function calculateHours(timeIn, timeOut) {
-            const [inHours, inMinutes] = timeIn.split(':').map(Number);
-            const [outHours, outMinutes] = timeOut.split(':').map(Number);
-            
-            let hours = outHours - inHours;
-            let minutes = outMinutes - inMinutes;
-            
-            if (minutes < 0) {
-                hours--;
-                minutes += 60;
-            }
-            
-            return parseFloat((hours + (minutes / 60)).toFixed(2));
-        }
-
         function addEntry(event) {
             event.preventDefault();
 
             const traineeName = document.getElementById('traineeName').value;
             const date = document.getElementById('date').value;
-            const timeIn = document.getElementById('timeIn').value;
-            const timeOut = document.getElementById('timeOut').value;
+            
+            // Get times
+            const morningIn = document.getElementById('morningIn').value;
+            const morningOut = document.getElementById('morningOut').value;
+            const afternoonIn = document.getElementById('afternoonIn').value;
+            const afternoonOut = document.getElementById('afternoonOut').value;
+            
+            // Validate times
+            if (morningOut <= morningIn) {
+                alert('Morning Time Out must be after Morning Time In');
+                return;
+            }
+            
+            if (afternoonOut <= afternoonIn) {
+                alert('Afternoon Time Out must be after Afternoon Time In');
+                return;
+            }
+            
+            // Calculate hours
+            const morningHours = calculateSessionHours(morningIn, morningOut);
+            const afternoonHours = calculateSessionHours(afternoonIn, afternoonOut);
+            const totalHours = morningHours + afternoonHours;
             
             // Get department
             let department;
@@ -1092,20 +1227,17 @@
             const tasks = document.getElementById('tasks').value;
             const remarks = document.getElementById('remarks').value;
 
-            if (timeOut <= timeIn) {
-                alert('Time Out must be after Time In');
-                return;
-            }
-
-            const hours = calculateHours(timeIn, timeOut);
-
             const newEntry = {
                 id: Date.now(),
                 traineeName,
                 date,
-                timeIn,
-                timeOut,
-                hours,
+                morningIn,
+                morningOut,
+                afternoonIn,
+                afternoonOut,
+                morningHours,
+                afternoonHours,
+                hours: totalHours,
                 department,
                 supervisor,
                 tasks,
@@ -1136,10 +1268,11 @@
             if (entry) {
                 document.getElementById('traineeName').value = entry.traineeName;
                 document.getElementById('date').value = entry.date;
-                document.getElementById('timeIn').value = entry.timeIn;
-                document.getElementById('timeOut').value = entry.timeOut;
+                document.getElementById('morningIn').value = entry.morningIn;
+                document.getElementById('morningOut').value = entry.morningOut;
+                document.getElementById('afternoonIn').value = entry.afternoonIn;
+                document.getElementById('afternoonOut').value = entry.afternoonOut;
                 
-                // Check if department exists in dropdown
                 const deptSelect = document.getElementById('department');
                 const optionExists = Array.from(deptSelect.options).some(opt => opt.value === entry.department);
                 
@@ -1155,7 +1288,8 @@
                 document.getElementById('tasks').value = entry.tasks;
                 document.getElementById('remarks').value = entry.remarks || '';
                 
-                // Remove old entry
+                updateTotalPreview();
+                
                 deleteEntry(id);
             }
         }
@@ -1164,6 +1298,11 @@
             document.getElementById('timeForm').reset();
             toggleDeptMode('select');
             setDefaultDate();
+            document.getElementById('morningIn').value = '08:00';
+            document.getElementById('morningOut').value = '12:00';
+            document.getElementById('afternoonIn').value = '13:00';
+            document.getElementById('afternoonOut').value = '17:00';
+            updateTotalPreview();
         }
 
         function updateRequiredHours() {
@@ -1282,10 +1421,8 @@
                 switch(currentSort.column) {
                     case 0: aVal = a.traineeName; bVal = b.traineeName; break;
                     case 1: aVal = a.date; bVal = b.date; break;
-                    case 2: aVal = a.timeIn; bVal = b.timeIn; break;
-                    case 3: aVal = a.timeOut; bVal = b.timeOut; break;
-                    case 4: aVal = a.hours; bVal = b.hours; break;
-                    case 5: aVal = a.department; bVal = b.department; break;
+                    case 2: aVal = a.hours; bVal = b.hours; break;
+                    case 3: aVal = a.department; bVal = b.department; break;
                     default: return 0;
                 }
                 
@@ -1302,12 +1439,12 @@
                 row.innerHTML = `
                     <td>${entry.traineeName}</td>
                     <td>${entry.date}</td>
-                    <td>${entry.timeIn}</td>
-                    <td>${entry.timeOut}</td>
-                    <td>${entry.hours.toFixed(1)}</td>
+                    <td class="morning-badge">${entry.morningIn} - ${entry.morningOut}<br><small>(${entry.morningHours.toFixed(1)} hrs)</small></td>
+                    <td class="afternoon-badge">${entry.afternoonIn} - ${entry.afternoonOut}<br><small>(${entry.afternoonHours.toFixed(1)} hrs)</small></td>
+                    <td><strong>${entry.hours.toFixed(1)}</strong></td>
                     <td>${entry.department}</td>
                     <td>${entry.supervisor}</td>
-                    <td>${entry.tasks.substring(0, 50)}${entry.tasks.length > 50 ? '...' : ''}</td>
+                    <td>${entry.tasks.substring(0, 30)}${entry.tasks.length > 30 ? '...' : ''}</td>
                     <td>${entry.remarks || ''}</td>
                     <td>
                         <button class="action-btn edit" onclick="editEntry(${entry.id})">✏️</button>
@@ -1324,10 +1461,10 @@
 
         // Export Functions
         function exportToCSV() {
-            let csv = 'Trainee Name,Date,Time In,Time Out,Hours,Department,Supervisor,Tasks,Remarks\n';
+            let csv = 'Trainee Name,Date,Morning In,Morning Out,Morning Hours,Afternoon In,Afternoon Out,Afternoon Hours,Total Hours,Department,Supervisor,Tasks,Remarks\n';
             
             entries.forEach(entry => {
-                csv += `"${entry.traineeName}","${entry.date}","${entry.timeIn}","${entry.timeOut}",${entry.hours.toFixed(1)},"${entry.department}","${entry.supervisor}","${entry.tasks.replace(/"/g, '""')}","${entry.remarks || ''}"\n`;
+                csv += `"${entry.traineeName}","${entry.date}","${entry.morningIn}","${entry.morningOut}",${entry.morningHours.toFixed(1)},"${entry.afternoonIn}","${entry.afternoonOut}",${entry.afternoonHours.toFixed(1)},${entry.hours.toFixed(1)},"${entry.department}","${entry.supervisor}","${entry.tasks.replace(/"/g, '""')}","${entry.remarks || ''}"\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -1356,6 +1493,13 @@
             doc.text(`Days Worked: ${new Set(entries.map(e => e.date)).size}`, 20, 70);
             doc.text(`Total Entries: ${entries.length}`, 20, 80);
             
+            // Add session breakdown
+            const avgMorning = entries.reduce((sum, e) => sum + e.morningHours, 0) / entries.length || 0;
+            const avgAfternoon = entries.reduce((sum, e) => sum + e.afternoonHours, 0) / entries.length || 0;
+            
+            doc.text(`Average Morning Hours: ${avgMorning.toFixed(1)}`, 20, 90);
+            doc.text(`Average Afternoon Hours: ${avgAfternoon.toFixed(1)}`, 20, 100);
+            
             doc.save(`ojt-summary-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
         }
 
@@ -1372,20 +1516,31 @@
             
             const tableData = entries.map(entry => [
                 entry.date,
-                entry.timeIn,
-                entry.timeOut,
+                `${entry.morningIn}-${entry.morningOut}`,
+                entry.morningHours.toFixed(1),
+                `${entry.afternoonIn}-${entry.afternoonOut}`,
+                entry.afternoonHours.toFixed(1),
                 entry.hours.toFixed(1),
                 entry.department,
-                entry.supervisor,
-                entry.tasks.substring(0, 30)
+                entry.supervisor
             ]);
             
             doc.autoTable({
                 startY: 45,
-                head: [['Date', 'In', 'Out', 'Hours', 'Dept', 'Supervisor', 'Tasks']],
+                head: [['Date', 'Morning', 'AM Hrs', 'Afternoon', 'PM Hrs', 'Total', 'Dept', 'Supervisor']],
                 body: tableData,
                 theme: 'striped',
-                headStyles: { fillColor: [102, 126, 234] }
+                headStyles: { fillColor: [102, 126, 234] },
+                columnStyles: {
+                    0: { cellWidth: 25 },
+                    1: { cellWidth: 30 },
+                    2: { cellWidth: 15 },
+                    3: { cellWidth: 30 },
+                    4: { cellWidth: 15 },
+                    5: { cellWidth: 15 },
+                    6: { cellWidth: 25 },
+                    7: { cellWidth: 25 }
+                }
             });
             
             doc.save(`ojt-details-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
