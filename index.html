@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OJT Time Tracker - Multi-User with Login</title>
+    <title>OJT Time Tracker - With Login</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             transition: all 0.3s ease;
@@ -21,23 +21,11 @@
         /* Login Page Styles */
         .login-container {
             max-width: 400px;
-            margin: 100px auto;
+            margin: 50px auto;
             padding: 40px;
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .login-header {
@@ -119,21 +107,6 @@
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .password-input {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #667eea;
-            font-size: 1.2em;
         }
 
         .btn-login {
@@ -154,86 +127,41 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-google {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            color: #333;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-google:hover {
-            background: #f8f9fa;
-            border-color: #667eea;
-        }
-
-        .btn-google img {
-            width: 24px;
-            height: 24px;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 45%;
-            height: 1px;
-            background: #e0e0e0;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 10px;
-            color: #666;
-            font-size: 0.9em;
-        }
-
         .error-message {
             color: #dc3545;
             font-size: 0.9em;
             margin-top: 5px;
             display: none;
+            text-align: center;
+            padding: 10px;
+            background: #ffe6e8;
+            border-radius: 8px;
         }
 
         .error-message.show {
             display: block;
-            animation: shake 0.5s ease;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        .success-message {
+            color: #28a745;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #d4edda;
+            border-radius: 8px;
         }
 
-        /* Main App Styles (existing styles with modifications) */
+        .success-message.show {
+            display: block;
+        }
+
+        /* App Container */
         .app-container {
             display: none;
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
         }
 
@@ -300,53 +228,347 @@
             color: white;
         }
 
-        /* Loading Overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 20px;
+        /* Goal Section */
+        .goal-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .loading-overlay.active {
+        .goal-container {
             display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .goal-input {
+            flex: 1;
+            min-width: 300px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
+        .goal-input label {
+            display: block;
+            margin-bottom: 10px;
             color: #333;
-            font-size: 1.2em;
             font-weight: 600;
         }
 
-        /* Existing styles from previous version (keep all your existing CSS) */
-        /* ... (copy all the existing CSS from the previous version) ... */
+        .goal-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        .goal-progress {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .percentage {
+            text-align: right;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .time-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: none;
+        }
+
+        /* Department selection */
+        .department-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .dept-option {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            background: #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dept-option.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .custom-dept-input {
+            display: none;
+        }
+
+        .custom-dept-input.active {
+            display: block;
+        }
+
+        /* Summary Cards */
+        .summary-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .summary-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        th:hover {
+            background: #e9ecef;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+
+        .action-btn.edit {
+            color: #28a745;
+        }
+
+        .total-row {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .total-row td {
+            border-top: 2px solid #333;
+        }
+
+        /* PDF Section */
+        .pdf-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .pdf-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-controls .btn {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .date-range input {
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
             .login-container {
-                margin: 50px 20px;
+                margin: 20px;
                 padding: 30px;
             }
             
@@ -358,21 +580,18 @@
             .user-info {
                 flex-direction: column;
             }
+            
+            .summary-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
-    <!-- Include Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Include jsPDF and autoTable -->
+    <!-- PDF Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <div class="loading-text">Loading...</div>
-    </div>
-
     <!-- Login Page -->
     <div class="login-container" id="loginPage">
         <div class="login-header">
@@ -389,343 +608,391 @@
         <div class="login-form active" id="loginForm">
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="loginEmail">Email</label>
+                    <label>Email</label>
                     <input type="email" id="loginEmail" required placeholder="your@email.com">
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="loginPassword" required placeholder="••••••••">
-                        <span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span>
-                    </div>
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
                 </div>
                 <div class="error-message" id="loginError"></div>
                 <button type="submit" class="btn-login">Sign In</button>
             </form>
-            
-            <div class="divider">
-                <span>OR</span>
-            </div>
-            
-            <button class="btn-google" onclick="handleGoogleLogin()">
-                <img src="https://www.google.com/favicon.ico" alt="Google"> Continue with Google
-            </button>
         </div>
 
         <!-- Signup Form -->
         <div class="login-form" id="signupForm">
             <form onsubmit="handleSignup(event)">
                 <div class="form-group">
-                    <label for="signupName">Full Name</label>
+                    <label>Full Name</label>
                     <input type="text" id="signupName" required placeholder="Juan Dela Cruz">
                 </div>
                 <div class="form-group">
-                    <label for="signupEmail">Email</label>
+                    <label>Email</label>
                     <input type="email" id="signupEmail" required placeholder="your@email.com">
                 </div>
                 <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
-                        <span class="toggle-password" onclick="togglePassword('signupPassword')">👁️</span>
-                    </div>
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
                 </div>
                 <div class="form-group">
-                    <label for="signupConfirm">Confirm Password</label>
-                    <div class="password-input">
-                        <input type="password" id="signupConfirm" required placeholder="••••••••">
-                        <span class="toggle-password" onclick="togglePassword('signupConfirm')">👁️</span>
-                    </div>
+                    <label>Confirm Password</label>
+                    <input type="password" id="signupConfirm" required placeholder="••••••••">
                 </div>
+                <div class="success-message" id="signupSuccess"></div>
                 <div class="error-message" id="signupError"></div>
                 <button type="submit" class="btn-login">Create Account</button>
             </form>
-            
-            <div class="divider">
-                <span>OR</span>
-            </div>
-            
-            <button class="btn-google" onclick="handleGoogleLogin()">
-                <img src="https://www.google.com/favicon.ico" alt="Google"> Continue with Google
-            </button>
         </div>
     </div>
 
-    <!-- Main App (hidden until login) -->
+    <!-- Main App -->
     <div class="app-container" id="appContainer">
         <div class="user-header">
             <div class="user-info">
                 <div class="user-avatar" id="userAvatar">JD</div>
                 <div class="user-details">
-                    <h2 id="userName">Juan Dela Cruz</h2>
-                    <p id="userEmail">juan@example.com</p>
+                    <h2 id="userName">Loading...</h2>
+                    <p id="userEmail">Loading...</p>
                 </div>
             </div>
             <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
         </div>
 
-        <!-- PASTE ALL YOUR EXISTING APP CONTENT HERE -->
-        <!-- Goal Section, Form Section, PDF Section, Summary Cards, Table Section -->
-        <!-- Copy everything from your previous version's app content -->
-        
-        <!-- Quick reminder of what to paste (use your existing HTML): -->
-        <!-- 
-        <div class="goal-section">...</div>
-        <div class="form-section">...</div>
-        <div class="pdf-section">...</div>
-        <div class="summary-section">...</div>
-        <div class="table-section">...</div>
-        -->
+        <!-- Goal Section -->
+        <div class="goal-section">
+            <div class="goal-container">
+                <div class="goal-input">
+                    <label>Required OJT Hours:</label>
+                    <input type="number" id="requiredHours" min="1" value="500" onchange="updateRequiredHours()">
+                </div>
+                <div class="goal-progress">
+                    <div class="progress-stats">
+                        <span>Progress</span>
+                        <span id="completedHours">0 / 500</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="percentage" id="percentage">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>➕ Log New Hours</h2>
+            <form class="time-form" id="timeForm" onsubmit="addEntry(event)">
+                <div class="form-group">
+                    <label>Trainee Name:</label>
+                    <input type="text" id="traineeName" required>
+                </div>
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Time In:</label>
+                    <input type="time" id="timeIn" required>
+                </div>
+                <div class="form-group">
+                    <label>Time Out:</label>
+                    <input type="time" id="timeOut" required>
+                </div>
+                <div class="form-group">
+                    <label>Department:</label>
+                    <div class="department-toggle">
+                        <div class="dept-option active" onclick="toggleDeptMode('select')">Select</div>
+                        <div class="dept-option" onclick="toggleDeptMode('custom')">Custom</div>
+                    </div>
+                    <div id="deptSelect">
+                        <select id="department" required>
+                            <option value="">Select Department</option>
+                            <option value="Accounting">📊 Accounting</option>
+                            <option value="IT">💻 IT</option>
+                            <option value="HR">👥 HR</option>
+                            <option value="Marketing">📱 Marketing</option>
+                            <option value="Finance">💰 Finance</option>
+                            <option value="Operations">⚡ Operations</option>
+                            <option value="Sales">💼 Sales</option>
+                            <option value="Engineering">⚙️ Engineering</option>
+                        </select>
+                    </div>
+                    <div id="deptCustom" class="custom-dept-input">
+                        <input type="text" id="customDepartment" placeholder="Type department...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Supervisor:</label>
+                    <input type="text" id="supervisor" required>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Tasks Performed:</label>
+                    <textarea id="tasks" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Remarks:</label>
+                    <input type="text" id="remarks">
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+                    <button type="submit" class="btn">Save Entry</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PDF Export Section -->
+        <div class="pdf-section">
+            <h2 style="margin-bottom: 20px;">📄 Export Options</h2>
+            <div class="pdf-controls">
+                <button class="btn btn-secondary" onclick="exportToCSV()">📥 Export CSV</button>
+                <button class="btn btn-secondary" onclick="exportSummaryPDF()">📊 Export PDF Summary</button>
+                <button class="btn btn-secondary" onclick="exportDetailedPDF()">📋 Export PDF Details</button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-section">
+            <div class="summary-card">
+                <h3>📅 This Week</h3>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="weekHours">0</div>
+                        <div class="stat-label">Hours</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="weekDays">0</div>
+                        <div class="stat-label">Days</div>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3>📆 This Month</h3>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthHours">0</div>
+                        <div class="stat-label">Hours</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthDays">0</div>
+                        <div class="stat-label">Days</div>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3>📊 Overall</h3>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalHours">0</div>
+                        <div class="stat-label">Hours</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalDays">0</div>
+                        <div class="stat-label">Days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2>📋 Time Entries</h2>
+                <div class="filter-group">
+                    <select id="filterDepartment" onchange="filterEntries()">
+                        <option value="">All Departments</option>
+                    </select>
+                    <input type="text" id="searchTrainee" placeholder="Search trainee..." onkeyup="filterEntries()">
+                </div>
+            </div>
+            <table id="entriesTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Trainee ⬍</th>
+                        <th onclick="sortTable(1)">Date ⬍</th>
+                        <th onclick="sortTable(2)">Time In ⬍</th>
+                        <th onclick="sortTable(3)">Time Out ⬍</th>
+                        <th onclick="sortTable(4)">Hours ⬍</th>
+                        <th onclick="sortTable(5)">Department ⬍</th>
+                        <th>Supervisor</th>
+                        <th>Tasks</th>
+                        <th>Remarks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="4"><strong>Total:</strong></td>
+                        <td id="totalHoursDisplay"><strong>0</strong></td>
+                        <td colspan="5"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
     <script>
-       // ==================== SUPABASE CONFIGURATION ====================
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        // ==================== AUTHENTICATION SYSTEM ====================
+        // This uses localStorage - NO SUPABASE NEEDED!
         
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Global state
         let currentUser = null;
         let entries = [];
 
-        // ==================== AUTHENTICATION FUNCTIONS ====================
-        
-        // Check if user is already logged in
-        async function checkUser() {
-            showLoading();
-            try {
-                const { data: { user }, error } = await supabase.auth.getUser();
-                if (user) {
-                    currentUser = user;
-                    await loadUserData();
-                    showApp();
-                } else {
-                    showLogin();
-                }
-            } catch (error) {
-                console.error('Error checking user:', error);
+        // Initialize on page load
+        window.onload = function() {
+            checkLoggedInUser();
+            setDefaultDate();
+        };
+
+        function checkLoggedInUser() {
+            const savedUser = localStorage.getItem('ojt_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                loadUserData();
+                showApp();
+            } else {
                 showLogin();
-            } finally {
-                hideLoading();
             }
         }
 
-        // Handle login
-        async function handleLogin(event) {
+        // Login Handler
+        function handleLogin(event) {
             event.preventDefault();
-            showLoading();
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const errorElement = document.getElementById('loginError');
             
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
+            
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                };
                 
-                if (error) throw error;
+                // Save current session
+                localStorage.setItem('ojt_current_user', JSON.stringify(currentUser));
                 
-                currentUser = data.user;
-                await loadUserData();
+                // Load user data
+                loadUserData();
+                
+                // Show app
                 showApp();
-            } catch (error) {
-                errorElement.textContent = error.message;
+                errorElement.classList.remove('show');
+            } else {
+                errorElement.textContent = 'Invalid email or password';
                 errorElement.classList.add('show');
-                hideLoading();
             }
         }
 
-        // Handle signup
-        async function handleSignup(event) {
+        // Signup Handler
+        function handleSignup(event) {
             event.preventDefault();
-            showLoading();
             
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const confirm = document.getElementById('signupConfirm').value;
             const errorElement = document.getElementById('signupError');
+            const successElement = document.getElementById('signupSuccess');
             
             // Validate passwords match
             if (password !== confirm) {
                 errorElement.textContent = 'Passwords do not match';
                 errorElement.classList.add('show');
-                hideLoading();
+                successElement.classList.remove('show');
                 return;
             }
             
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name
-                        }
-                    }
-                });
-                
-                if (error) throw error;
-                
-                // Show success message
-                alert('Account created! Please check your email for verification.');
-                switchTab('login');
-            } catch (error) {
-                errorElement.textContent = error.message;
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
+            
+            // Check if email already exists
+            if (users.some(u => u.email === email)) {
+                errorElement.textContent = 'Email already registered';
                 errorElement.classList.add('show');
-            } finally {
-                hideLoading();
+                successElement.classList.remove('show');
+                return;
             }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                password: password,
+                created: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('ojt_users', JSON.stringify(users));
+            
+            // Show success message
+            successElement.textContent = 'Account created! You can now login.';
+            successElement.classList.add('show');
+            errorElement.classList.remove('show');
+            
+            // Clear form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirm').value = '';
+            
+            // Switch to login tab after 2 seconds
+            setTimeout(() => {
+                switchTab('login');
+                successElement.classList.remove('show');
+            }, 2000);
         }
 
-        // Handle Google login
-        async function handleGoogleLogin() {
-            showLoading();
-            try {
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: window.location.origin
-                    }
-                });
-                
-                if (error) throw error;
-                
-                // The page will redirect, so loading will stay on
-            } catch (error) {
-                alert('Google login failed: ' + error.message);
-                hideLoading();
-            }
+        // Logout Handler
+        function handleLogout() {
+            localStorage.removeItem('ojt_current_user');
+            currentUser = null;
+            showLogin();
         }
 
-        // Handle logout
-        async function handleLogout() {
-            showLoading();
-            try {
-                const { error } = await supabase.auth.signOut();
-                if (error) throw error;
-                
-                currentUser = null;
-                entries = [];
-                showLogin();
-            } catch (error) {
-                alert('Logout failed: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // ==================== DATA FUNCTIONS ====================
-        
-        // Load user data from database
-        async function loadUserData() {
+        // Load user-specific data
+        function loadUserData() {
             if (!currentUser) return;
             
-            try {
-                // Get user's entries
-                const { data: userEntries, error } = await supabase
-                    .from('ojt_entries')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('date', { ascending: false });
-                
-                if (error) throw error;
-                
-                entries = userEntries || [];
-                
-                // Update UI
-                updateUserInfo();
-                renderEntries();
-                updateSummaries();
-                updateDepartmentFilter();
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Error loading your data. Please refresh.');
-            }
-        }
-
-        // Save new entry
-        async function saveEntryToDB(entry) {
-            if (!currentUser) return null;
+            const allEntries = JSON.parse(localStorage.getItem('ojt_all_entries')) || {};
+            entries = allEntries[currentUser.id] || [];
             
-            try {
-                const { data, error } = await supabase
-                    .from('ojt_entries')
-                    .insert([{
-                        user_id: currentUser.id,
-                        trainee_name: entry.traineeName,
-                        date: entry.date,
-                        time_in: entry.timeIn,
-                        time_out: entry.timeOut,
-                        hours: entry.hours,
-                        department: entry.department,
-                        supervisor: entry.supervisor,
-                        tasks: entry.tasks,
-                        remarks: entry.remarks || ''
-                    }])
-                    .select();
+            updateUserInfo();
+            renderEntries();
+            updateSummaries();
+            updateDepartmentFilter();
+        }
+
+        // Save entries for current user
+        function saveEntries() {
+            if (!currentUser) return;
+            
+            const allEntries = JSON.parse(localStorage.getItem('ojt_all_entries')) || {};
+            allEntries[currentUser.id] = entries;
+            localStorage.setItem('ojt_all_entries', JSON.stringify(allEntries));
+        }
+
+        // Update user info in header
+        function updateUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
                 
-                if (error) throw error;
-                
-                return data[0];
-            } catch (error) {
-                console.error('Error saving entry:', error);
-                alert('Failed to save entry: ' + error.message);
-                return null;
+                const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                document.getElementById('userAvatar').textContent = initials;
             }
         }
 
-        // Update entry
-        async function updateEntryInDB(id, updates) {
-            try {
-                const { error } = await supabase
-                    .from('ojt_entries')
-                    .update(updates)
-                    .eq('id', id)
-                    .eq('user_id', currentUser.id);
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Error updating entry:', error);
-                alert('Failed to update entry');
-                return false;
-            }
-        }
-
-        // Delete entry
-        async function deleteEntryFromDB(id) {
-            try {
-                const { error } = await supabase
-                    .from('ojt_entries')
-                    .delete()
-                    .eq('id', id)
-                    .eq('user_id', currentUser.id);
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Error deleting entry:', error);
-                alert('Failed to delete entry');
-                return false;
-            }
-        }
-
-        // ==================== UI FUNCTIONS ====================
-        
-        function showLoading() {
-            document.getElementById('loadingOverlay').classList.add('active');
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.remove('active');
-        }
-
+        // UI Helpers
         function showLogin() {
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('appContainer').classList.remove('active');
@@ -737,77 +1004,103 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         }
 
         function switchTab(tab) {
-            const loginTab = document.querySelectorAll('.login-tab');
+            const tabs = document.querySelectorAll('.login-tab');
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
             
             if (tab === 'login') {
-                loginTab[0].classList.add('active');
-                loginTab[1].classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
                 loginForm.classList.add('active');
                 signupForm.classList.remove('active');
             } else {
-                loginTab[0].classList.remove('active');
-                loginTab[1].classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
                 loginForm.classList.remove('active');
                 signupForm.classList.add('active');
             }
         }
 
-        function togglePassword(id) {
-            const input = document.getElementById(id);
-            input.type = input.type === 'password' ? 'text' : 'password';
+        // ==================== TRACKER FUNCTIONS ====================
+
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
         }
 
-        function updateUserInfo() {
-            if (currentUser) {
-                const name = currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User';
-                const email = currentUser.email || '';
-                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                
-                document.getElementById('userName').textContent = name;
-                document.getElementById('userEmail').textContent = email;
-                document.getElementById('userAvatar').textContent = initials;
+        function toggleDeptMode(mode) {
+            const selectOption = document.querySelector('.dept-option:first-child');
+            const customOption = document.querySelector('.dept-option:last-child');
+            const deptSelect = document.getElementById('deptSelect');
+            const deptCustom = document.getElementById('deptCustom');
+            
+            if (mode === 'select') {
+                selectOption.classList.add('active');
+                customOption.classList.remove('active');
+                deptSelect.style.display = 'block';
+                deptCustom.classList.remove('active');
+                document.getElementById('department').required = true;
+            } else {
+                selectOption.classList.remove('active');
+                customOption.classList.add('active');
+                deptSelect.style.display = 'none';
+                deptCustom.classList.add('active');
+                document.getElementById('department').required = false;
             }
         }
 
-        // ==================== EXISTING FUNCTIONS ====================
-        // Copy all your existing functions here (addEntry, deleteEntry, etc.)
-        // But modify them to use the database functions above
-        
-        // Modified addEntry function
-        async function addEntry(event) {
-            event.preventDefault();
-            showLoading();
+        function calculateHours(timeIn, timeOut) {
+            const [inHours, inMinutes] = timeIn.split(':').map(Number);
+            const [outHours, outMinutes] = timeOut.split(':').map(Number);
+            
+            let hours = outHours - inHours;
+            let minutes = outMinutes - inMinutes;
+            
+            if (minutes < 0) {
+                hours--;
+                minutes += 60;
+            }
+            
+            return parseFloat((hours + (minutes / 60)).toFixed(2));
+        }
 
-            // Get form values (same as before)
+        function addEntry(event) {
+            event.preventDefault();
+
             const traineeName = document.getElementById('traineeName').value;
             const date = document.getElementById('date').value;
             const timeIn = document.getElementById('timeIn').value;
             const timeOut = document.getElementById('timeOut').value;
             
-            // Get department (same as before)
+            // Get department
             let department;
             if (document.getElementById('deptSelect').style.display !== 'none') {
                 department = document.getElementById('department').value;
+                if (!department) {
+                    alert('Please select a department');
+                    return;
+                }
             } else {
                 department = document.getElementById('customDepartment').value;
+                if (!department) {
+                    alert('Please enter a department');
+                    return;
+                }
             }
             
             const supervisor = document.getElementById('supervisor').value;
             const tasks = document.getElementById('tasks').value;
             const remarks = document.getElementById('remarks').value;
 
-            // Validate
             if (timeOut <= timeIn) {
                 alert('Time Out must be after Time In');
-                hideLoading();
                 return;
             }
 
             const hours = calculateHours(timeIn, timeOut);
 
             const newEntry = {
+                id: Date.now(),
                 traineeName,
                 date,
                 timeIn,
@@ -819,69 +1112,284 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
                 remarks
             };
 
-            // Save to database
-            const savedEntry = await saveEntryToDB(newEntry);
-            
-            if (savedEntry) {
-                // Add to local array with the database ID
-                entries.push({
-                    id: savedEntry.id,
-                    ...newEntry
-                });
-                
+            entries.push(newEntry);
+            saveEntries();
+            renderEntries();
+            updateSummaries();
+            resetForm();
+            setDefaultDate();
+            updateDepartmentFilter();
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                entries = entries.filter(entry => entry.id !== id);
+                saveEntries();
                 renderEntries();
                 updateSummaries();
-                resetForm();
-                setDefaultDate();
                 updateDepartmentFilter();
             }
-            
-            hideLoading();
         }
 
-        // Modified delete function
-        async function deleteEntry(id) {
-            if (confirm('Are you sure you want to delete this entry?')) {
-                showLoading();
-                const success = await deleteEntryFromDB(id);
-                if (success) {
-                    entries = entries.filter(entry => entry.id !== id);
-                    renderEntries();
-                    updateSummaries();
-                    updateDepartmentFilter();
+        function editEntry(id) {
+            const entry = entries.find(e => e.id === id);
+            if (entry) {
+                document.getElementById('traineeName').value = entry.traineeName;
+                document.getElementById('date').value = entry.date;
+                document.getElementById('timeIn').value = entry.timeIn;
+                document.getElementById('timeOut').value = entry.timeOut;
+                
+                // Check if department exists in dropdown
+                const deptSelect = document.getElementById('department');
+                const optionExists = Array.from(deptSelect.options).some(opt => opt.value === entry.department);
+                
+                if (optionExists) {
+                    toggleDeptMode('select');
+                    deptSelect.value = entry.department;
+                } else {
+                    toggleDeptMode('custom');
+                    document.getElementById('customDepartment').value = entry.department;
                 }
-                hideLoading();
+                
+                document.getElementById('supervisor').value = entry.supervisor;
+                document.getElementById('tasks').value = entry.tasks;
+                document.getElementById('remarks').value = entry.remarks || '';
+                
+                // Remove old entry
+                deleteEntry(id);
             }
         }
 
-        // ==================== INITIALIZATION ====================
-        
-        // Check user on page load
-        window.onload = function() {
-            checkUser();
+        function resetForm() {
+            document.getElementById('timeForm').reset();
+            toggleDeptMode('select');
             setDefaultDate();
-            
-            // Handle OAuth redirect
-            const hash = window.location.hash;
-            if (hash && hash.includes('access_token')) {
-                showLoading();
-                // Supabase will handle the session automatically
-                setTimeout(() => {
-                    checkUser();
-                }, 1000);
-            }
-        };
+        }
 
-        // Copy all your other existing functions here:
-        // calculateHours, resetForm, setDefaultDate, updateRequiredHours,
-        // updateProgress, updateSummaries, filterEntries, sortTable,
-        // renderEntries, exportToCSV, showDatePicker, hideDatePicker,
-        // getFilteredEntriesByDate, exportSummaryPDF, exportDetailedPDF,
-        // exportTraineeReport, exportDepartmentReport, exportCustomDatePDF,
-        // toggleDeptMode, handleDeptChange, showDeptSuggestions, selectDeptSuggestion,
-        // quickSelectDept, updateDepartmentFilter
-        
-        // PASTE ALL YOUR EXISTING FUNCTIONS HERE
+        function updateRequiredHours() {
+            const requiredHours = parseInt(document.getElementById('requiredHours').value) || 500;
+            localStorage.setItem('requiredHours', requiredHours);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const requiredHours = parseInt(localStorage.getItem('requiredHours')) || 500;
+            const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+            const percentage = Math.min((totalHours / requiredHours) * 100, 100);
+            
+            document.getElementById('completedHours').textContent = `${totalHours.toFixed(1)} / ${requiredHours}`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('percentage').textContent = `${percentage.toFixed(1)}%`;
+        }
+
+        function updateSummaries() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+            
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+
+            let weekHours = 0;
+            let weekDays = new Set();
+            let monthHours = 0;
+            let monthDays = new Set();
+            let totalHours = 0;
+            let totalDays = new Set();
+
+            entries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                
+                if (entryDate >= startOfWeek && entryDate <= endOfWeek) {
+                    weekHours += entry.hours;
+                    weekDays.add(entry.date);
+                }
+                
+                if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
+                    monthHours += entry.hours;
+                    monthDays.add(entry.date);
+                }
+                
+                totalHours += entry.hours;
+                totalDays.add(entry.date);
+            });
+
+            document.getElementById('weekHours').textContent = weekHours.toFixed(1);
+            document.getElementById('weekDays').textContent = weekDays.size;
+            document.getElementById('monthHours').textContent = monthHours.toFixed(1);
+            document.getElementById('monthDays').textContent = monthDays.size;
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+            document.getElementById('totalDays').textContent = totalDays.size;
+            document.getElementById('totalHoursDisplay').textContent = totalHours.toFixed(1);
+
+            updateProgress();
+        }
+
+        function updateDepartmentFilter() {
+            const departments = [...new Set(entries.map(e => e.department))].sort();
+            const filterSelect = document.getElementById('filterDepartment');
+            
+            const currentValue = filterSelect.value;
+            
+            filterSelect.innerHTML = '<option value="">All Departments</option>';
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept;
+                option.textContent = dept;
+                filterSelect.appendChild(option);
+            });
+            
+            if (departments.includes(currentValue)) {
+                filterSelect.value = currentValue;
+            }
+        }
+
+        let currentFilter = { department: '', trainee: '' };
+        let currentSort = { column: 1, ascending: false };
+
+        function filterEntries() {
+            currentFilter.department = document.getElementById('filterDepartment').value;
+            currentFilter.trainee = document.getElementById('searchTrainee').value.toLowerCase();
+            renderEntries();
+        }
+
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.ascending = !currentSort.ascending;
+            } else {
+                currentSort.column = column;
+                currentSort.ascending = true;
+            }
+            renderEntries();
+        }
+
+        function renderEntries() {
+            let filteredEntries = entries.filter(entry => {
+                const matchDepartment = !currentFilter.department || entry.department === currentFilter.department;
+                const matchTrainee = !currentFilter.trainee || entry.traineeName.toLowerCase().includes(currentFilter.trainee);
+                return matchDepartment && matchTrainee;
+            });
+
+            filteredEntries.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch(currentSort.column) {
+                    case 0: aVal = a.traineeName; bVal = b.traineeName; break;
+                    case 1: aVal = a.date; bVal = b.date; break;
+                    case 2: aVal = a.timeIn; bVal = b.timeIn; break;
+                    case 3: aVal = a.timeOut; bVal = b.timeOut; break;
+                    case 4: aVal = a.hours; bVal = b.hours; break;
+                    case 5: aVal = a.department; bVal = b.department; break;
+                    default: return 0;
+                }
+                
+                if (aVal < bVal) return currentSort.ascending ? -1 : 1;
+                if (aVal > bVal) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            filteredEntries.forEach(entry => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${entry.traineeName}</td>
+                    <td>${entry.date}</td>
+                    <td>${entry.timeIn}</td>
+                    <td>${entry.timeOut}</td>
+                    <td>${entry.hours.toFixed(1)}</td>
+                    <td>${entry.department}</td>
+                    <td>${entry.supervisor}</td>
+                    <td>${entry.tasks.substring(0, 50)}${entry.tasks.length > 50 ? '...' : ''}</td>
+                    <td>${entry.remarks || ''}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="editEntry(${entry.id})">✏️</button>
+                        <button class="action-btn" onclick="deleteEntry(${entry.id})">🗑️</button>
+                    </td>
+                `;
+            });
+
+            if (filteredEntries.length === 0) {
+                const row = tbody.insertRow();
+                row.innerHTML = '<td colspan="10" style="text-align: center; padding: 30px;">No entries found</td>';
+            }
+        }
+
+        // Export Functions
+        function exportToCSV() {
+            let csv = 'Trainee Name,Date,Time In,Time Out,Hours,Department,Supervisor,Tasks,Remarks\n';
+            
+            entries.forEach(entry => {
+                csv += `"${entry.traineeName}","${entry.date}","${entry.timeIn}","${entry.timeOut}",${entry.hours.toFixed(1)},"${entry.department}","${entry.supervisor}","${entry.tasks.replace(/"/g, '""')}","${entry.remarks || ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ojt-${currentUser.name}-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function exportSummaryPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const totalHours = entries.reduce((sum, e) => sum + e.hours, 0);
+            const requiredHours = parseInt(localStorage.getItem('requiredHours')) || 500;
+            const percentage = (totalHours / requiredHours * 100).toFixed(1);
+            
+            doc.setFontSize(20);
+            doc.text('OJT Summary Report', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.text(`Trainee: ${currentUser.name}`, 20, 40);
+            doc.text(`Email: ${currentUser.email}`, 20, 50);
+            doc.text(`Total Hours: ${totalHours.toFixed(1)} / ${requiredHours} (${percentage}%)`, 20, 60);
+            doc.text(`Days Worked: ${new Set(entries.map(e => e.date)).size}`, 20, 70);
+            doc.text(`Total Entries: ${entries.length}`, 20, 80);
+            
+            doc.save(`ojt-summary-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        function exportDetailedPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            
+            doc.setFontSize(20);
+            doc.text('OJT Detailed Report', 150, 20, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.text(`Trainee: ${currentUser.name}`, 20, 30);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 37);
+            
+            const tableData = entries.map(entry => [
+                entry.date,
+                entry.timeIn,
+                entry.timeOut,
+                entry.hours.toFixed(1),
+                entry.department,
+                entry.supervisor,
+                entry.tasks.substring(0, 30)
+            ]);
+            
+            doc.autoTable({
+                startY: 45,
+                head: [['Date', 'In', 'Out', 'Hours', 'Dept', 'Supervisor', 'Tasks']],
+                body: tableData,
+                theme: 'striped',
+                headStyles: { fillColor: [102, 126, 234] }
+            });
+            
+            doc.save(`ojt-details-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
     </script>
 </body>
 </html>
