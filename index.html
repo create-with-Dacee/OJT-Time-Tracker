@@ -3,962 +3,635 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OJT Time Tracker - With AM/PM Sessions</title>
+    <title>OJT DTR Tracker - Daily Time Record</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        /* Login Page Styles (same as before) */
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .login-header p {
-            color: #666;
-        }
-
-        .login-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 8px 8px 0 0;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .login-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .login-tab:not(.active):hover {
-            background: #f0f0f0;
-        }
-
-        .login-form {
-            display: none;
-        }
-
-        .login-form.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
-            text-align: center;
-            padding: 10px;
-            background: #ffe6e8;
-            border-radius: 8px;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .success-message {
-            color: #28a745;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
-            text-align: center;
-            padding: 10px;
-            background: #d4edda;
-            border-radius: 8px;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        /* App Container */
-        .app-container {
-            display: none;
-            max-width: 1400px;
-            margin: 0 auto;
+            background: #f5f5f5;
             padding: 20px;
         }
 
-        .app-container.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .user-header {
-            background: white;
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Header */
+        .header {
+            margin-bottom: 25px;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
+        .header h1 {
+            font-size: 2em;
             font-weight: 600;
-        }
-
-        .user-details h2 {
             color: #333;
             margin-bottom: 5px;
         }
 
-        .user-details p {
+        .header p {
             color: #666;
-            font-size: 0.9em;
+            font-size: 1em;
         }
 
-        .btn-logout {
+        /* Stats Cards Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .stat-card .sub {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-header .label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .progress-header .percentage {
+            color: #666;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #333;
+            width: 0%;
+            border-radius: 4px;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-section h2 {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        .form-row label {
+            display: block;
+            color: #333;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            background: #fafafa;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #333;
+            background: white;
+        }
+
+        /* Session Card */
+        .session-card {
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .session-header h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .session-header .duration {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .session-header .duration span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .time-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .time-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .time-field label {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .time-field input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+        }
+
+        .time-field input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .time-separator {
+            color: #999;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        /* Overtime Section */
+        .overtime-section {
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .overtime-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .overtime-header h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .overtime-header .duration {
+            color: #666;
+        }
+
+        .overtime-header .duration span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Total Shift */
+        .total-shift {
+            text-align: right;
+            padding: 15px 0;
+            border-top: 2px solid #eee;
+            margin-top: 15px;
+        }
+
+        .total-shift .label {
+            color: #666;
+            font-size: 1em;
+            margin-right: 15px;
+        }
+
+        .total-shift .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Save Button */
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0 10px;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #000;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .quick-stat-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .quick-stat-item .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Settings Section */
+        .settings-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .settings-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .target-input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            width: 120px;
+        }
+
+        .settings-note {
+            color: #666;
+            font-size: 0.9em;
+            flex: 1;
+        }
+
+        .settings-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-save {
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
             padding: 10px 20px;
             background: #f0f0f0;
             color: #333;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .btn-logout:hover {
-            background: #dc3545;
-            color: white;
-        }
-
-        /* Goal Section */
-        .goal-section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .goal-container {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .goal-input {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .goal-input label {
-            display: block;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .goal-input input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.1em;
-        }
-
-        .goal-progress {
-            flex: 2;
-            min-width: 300px;
-        }
-
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .progress-bar {
-            height: 20px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.3s ease;
-            border-radius: 10px;
-        }
-
-        .percentage {
-            text-align: right;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        /* Form Section - UPDATED with AM/PM */
-        .form-section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .form-section h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .form-section h3 {
-            color: #555;
-            margin: 20px 0 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .time-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            margin-bottom: 5px;
-            color: #555;
             font-weight: 500;
-        }
-
-        .form-group label i {
-            color: #667eea;
-            margin-right: 5px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .session-box {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-        }
-
-        .session-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .session-title span {
-            background: #667eea;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-        }
-
-        .time-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .total-hours-display {
-            background: linear-gradient(135deg, #667eea10, #764ba210);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            grid-column: span 2;
-        }
-
-        .total-hours-display .big-number {
-            font-size: 2.5em;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .total-hours-display .label {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-            transform: none;
-        }
-
-        /* Department selection */
-        .department-toggle {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .dept-option {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            background: #f0f0f0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .dept-option.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .custom-dept-input {
-            display: none;
-        }
-
-        .custom-dept-input.active {
-            display: block;
-        }
-
-        /* Summary Cards */
-        .summary-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .summary-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .summary-card h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-        }
-
-        .summary-stats {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-        }
-
-        .stat-item {
-            flex: 1;
-        }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        /* Table Section - UPDATED with AM/PM columns */
+        /* Table Section */
         .table-section {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow-x: auto;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
 
         .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 15px 10px;
+            border-bottom: 2px solid #eee;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9em;
         }
 
-        .filter-group {
+        .table-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .table-row .actions {
             display: flex;
             gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
-        .filter-group select, .filter-group input {
-            padding: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            color: #333;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        th:hover {
-            background: #e9ecef;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            color: #555;
-            font-size: 0.9em;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .morning-badge {
-            color: #28a745;
-            font-weight: 500;
-        }
-
-        .afternoon-badge {
-            color: #fd7e14;
-            font-weight: 500;
-        }
-
-        .action-btn {
+        .edit-btn, .delete-btn {
             background: none;
             border: none;
-            color: #dc3545;
             cursor: pointer;
-            font-size: 1.2em;
-            margin: 0 5px;
+            font-size: 1.1em;
+            padding: 5px;
         }
 
-        .action-btn.edit {
-            color: #28a745;
+        .edit-btn { color: #333; }
+        .delete-btn { color: #999; }
+
+        .no-shifts {
+            text-align: center;
+            padding: 40px;
+            color: #999;
         }
 
-        .total-row {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-
-        .total-row td {
-            border-top: 2px solid #333;
-        }
-
-        /* PDF Section */
-        .pdf-section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .pdf-controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pdf-controls .btn {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .login-container {
-                margin: 20px;
-                padding: 30px;
+            .stats-row {
+                grid-template-columns: 1fr;
             }
             
-            .user-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .user-info {
-                flex-direction: column;
-            }
-            
-            .summary-stats {
-                flex-direction: column;
-                gap: 15px;
+            .quick-stats {
+                grid-template-columns: 1fr;
             }
             
             .time-row {
                 grid-template-columns: 1fr;
             }
+            
+            .time-separator {
+                display: none;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: repeat(7, minmax(80px, 1fr));
+                overflow-x: auto;
+            }
         }
     </style>
-    <!-- PDF Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <!-- Login Page -->
-    <div class="login-container" id="loginPage">
-        <div class="login-header">
-            <h1>📊 OJT Tracker</h1>
-            <p>Sign in to track your training hours</p>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>OJT DTR Tracker</h1>
+            <p>Daily Time Record</p>
         </div>
 
-        <div class="login-tabs">
-            <div class="login-tab active" onclick="switchTab('login')">Login</div>
-            <div class="login-tab" onclick="switchTab('signup')">Sign Up</div>
-        </div>
-
-        <!-- Login Form -->
-        <div class="login-form active" id="loginForm">
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" required placeholder="your@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
-                </div>
-                <div class="error-message" id="loginError"></div>
-                <button type="submit" class="btn-login">Sign In</button>
-            </form>
-        </div>
-
-        <!-- Signup Form -->
-        <div class="login-form" id="signupForm">
-            <form onsubmit="handleSignup(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="signupName" required placeholder="Juan Dela Cruz">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="signupEmail" required placeholder="your@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" id="signupConfirm" required placeholder="••••••••">
-                </div>
-                <div class="success-message" id="signupSuccess"></div>
-                <div class="error-message" id="signupError"></div>
-                <button type="submit" class="btn-login">Create Account</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Main App -->
-    <div class="app-container" id="appContainer">
-        <div class="user-header">
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">JD</div>
-                <div class="user-details">
-                    <h2 id="userName">Loading...</h2>
-                    <p id="userEmail">Loading...</p>
-                </div>
+        <!-- Stats Cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="label">Total Hours Completed</div>
+                <div class="value" id="totalHoursCompleted">0.0</div>
+                <div class="sub">hours logged</div>
             </div>
-            <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
-        </div>
-
-        <!-- Goal Section -->
-        <div class="goal-section">
-            <div class="goal-container">
-                <div class="goal-input">
-                    <label>Required OJT Hours:</label>
-                    <input type="number" id="requiredHours" min="1" value="500" onchange="updateRequiredHours()">
-                </div>
-                <div class="goal-progress">
-                    <div class="progress-stats">
-                        <span>Progress</span>
-                        <span id="completedHours">0 / 500</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                    </div>
-                    <div class="percentage" id="percentage">0%</div>
-                </div>
+            <div class="stat-card">
+                <div class="label">Target OJT Hours</div>
+                <div class="value" id="targetHours">400</div>
+                <div class="sub">required hours</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Hours Remaining</div>
+                <div class="value" id="hoursRemaining">400.0</div>
+                <div class="sub">hours to go</div>
             </div>
         </div>
 
-        <!-- Form Section - UPDATED with AM/PM -->
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="label">OJT Progress</span>
+                <span class="percentage" id="progressPercent">0.0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div style="color: #666; font-size: 0.9em; margin-top: 8px;">Progress toward goal</div>
+        </div>
+
+        <!-- Log Shift Form -->
         <div class="form-section">
-            <h2>➕ Log New Hours</h2>
-            <form class="time-form" id="timeForm" onsubmit="addEntry(event)">
-                <!-- Basic Info -->
-                <div class="form-group" style="grid-column: span 2;">
-                    <label><i>👤</i> Trainee Name:</label>
-                    <input type="text" id="traineeName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label><i>📅</i> Date:</label>
-                    <input type="date" id="date" required>
-                </div>
+            <h2>Log OJT Shift</h2>
+            <div class="form-subtitle">Enter your completed shift details</div>
 
-                <!-- Morning Session -->
-                <div style="grid-column: span 2;">
-                    <div class="session-box">
-                        <div class="session-title">
-                            <span>🌅 MORNING SESSION</span>
-                        </div>
-                        <div class="time-row">
-                            <div class="form-group">
-                                <label>Time In (AM):</label>
-                                <input type="time" id="morningIn" required value="08:00">
-                            </div>
-                            <div class="form-group">
-                                <label>Time Out (AM):</label>
-                                <input type="time" id="morningOut" required value="12:00">
-                            </div>
-                        </div>
+            <!-- Date -->
+            <div class="form-row">
+                <label>Date</label>
+                <input type="date" class="date-input" id="shiftDate" value="2026-02-24">
+            </div>
+
+            <!-- Morning Session -->
+            <div class="session-card">
+                <div class="session-header">
+                    <h3>Morning Session</h3>
+                    <div class="duration">Duration: <span id="morningDuration">4.00</span> hrs</div>
+                </div>
+                <div class="time-row">
+                    <div class="time-field">
+                        <label>Clock In</label>
+                        <input type="time" id="morningIn" value="08:00" onchange="calculateDurations()">
+                    </div>
+                    <div class="time-separator">○</div>
+                    <div class="time-field">
+                        <label>Clock Out</label>
+                        <input type="time" id="morningOut" value="12:00" onchange="calculateDurations()">
                     </div>
                 </div>
+            </div>
 
-                <!-- Afternoon Session -->
-                <div style="grid-column: span 2;">
-                    <div class="session-box">
-                        <div class="session-title">
-                            <span>☀️ AFTERNOON SESSION</span>
-                        </div>
-                        <div class="time-row">
-                            <div class="form-group">
-                                <label>Time In (PM):</label>
-                                <input type="time" id="afternoonIn" required value="13:00">
-                            </div>
-                            <div class="form-group">
-                                <label>Time Out (PM):</label>
-                                <input type="time" id="afternoonOut" required value="17:00">
-                            </div>
-                        </div>
+            <!-- Afternoon Session -->
+            <div class="session-card">
+                <div class="session-header">
+                    <h3>Afternoon Session</h3>
+                    <div class="duration">Duration: <span id="afternoonDuration">4.00</span> hrs</div>
+                </div>
+                <div class="time-row">
+                    <div class="time-field">
+                        <label>Clock In</label>
+                        <input type="time" id="afternoonIn" value="13:00" onchange="calculateDurations()">
+                    </div>
+                    <div class="time-separator">○</div>
+                    <div class="time-field">
+                        <label>Clock Out</label>
+                        <input type="time" id="afternoonOut" value="17:00" onchange="calculateDurations()">
                     </div>
                 </div>
+            </div>
 
-                <!-- Total Hours Display -->
-                <div class="total-hours-display">
-                    <div class="big-number" id="totalHoursPreview">8.0</div>
-                    <div class="label">Total Hours for the Day</div>
+            <!-- Overtime (Optional) -->
+            <div class="overtime-section">
+                <div class="overtime-header">
+                    <h3>Overtime (Optional)</h3>
+                    <div class="duration">Duration: <span id="overtimeDuration">0.00</span> hrs</div>
                 </div>
-
-                <!-- Other Details -->
-                <div class="form-group">
-                    <label><i>🏢</i> Department:</label>
-                    <div class="department-toggle">
-                        <div class="dept-option active" onclick="toggleDeptMode('select')">Select</div>
-                        <div class="dept-option" onclick="toggleDeptMode('custom')">Custom</div>
+                <div class="time-row">
+                    <div class="time-field">
+                        <label>Start</label>
+                        <input type="time" id="overtimeStart" value="" onchange="calculateDurations()">
                     </div>
-                    <div id="deptSelect">
-                        <select id="department" required>
-                            <option value="">Select Department</option>
-                            <option value="Accounting">📊 Accounting</option>
-                            <option value="IT">💻 IT</option>
-                            <option value="HR">👥 HR</option>
-                            <option value="Marketing">📱 Marketing</option>
-                            <option value="Finance">💰 Finance</option>
-                            <option value="Operations">⚡ Operations</option>
-                            <option value="Sales">💼 Sales</option>
-                            <option value="Engineering">⚙️ Engineering</option>
-                            <option value="Administration">📋 Administration</option>
-                            <option value="Customer Service">💬 Customer Service</option>
-                        </select>
-                    </div>
-                    <div id="deptCustom" class="custom-dept-input">
-                        <input type="text" id="customDepartment" placeholder="Type department...">
+                    <div class="time-separator">○</div>
+                    <div class="time-field">
+                        <label>End</label>
+                        <input type="time" id="overtimeEnd" value="" onchange="calculateDurations()">
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label><i>👔</i> Supervisor:</label>
-                    <input type="text" id="supervisor" required>
-                </div>
+            <!-- Total Shift Duration -->
+            <div class="total-shift">
+                <span class="label">Total Shift Duration:</span>
+                <span class="value" id="totalShiftDuration">8.00</span>
+                <span style="font-size: 1.2em; color: #666;"> hours</span>
+            </div>
 
-                <div class="form-group" style="grid-column: span 2;">
-                    <label><i>📝</i> Tasks Performed:</label>
-                    <textarea id="tasks" required></textarea>
-                </div>
-
-                <div class="form-group" style="grid-column: span 2;">
-                    <label><i>💬</i> Remarks:</label>
-                    <input type="text" id="remarks">
-                </div>
-
-                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end; grid-column: span 2;">
-                    <button type="submit" class="btn">Save Entry</button>
-                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
-                </div>
-            </form>
+            <!-- Save Button -->
+            <button class="save-btn" onclick="saveShift()">Save Shift</button>
         </div>
 
-        <!-- PDF Export Section -->
-        <div class="pdf-section">
-            <h2 style="margin-bottom: 20px;">📄 Export Options</h2>
-            <div class="pdf-controls">
-                <button class="btn btn-secondary" onclick="exportToCSV()">📥 Export CSV</button>
-                <button class="btn btn-secondary" onclick="exportSummaryPDF()">📊 Export PDF Summary</button>
-                <button class="btn btn-secondary" onclick="exportDetailedPDF()">📋 Export PDF Details</button>
+        <!-- Quick Statistics -->
+        <div class="quick-stats">
+            <div class="quick-stat-item">
+                <div class="label">Total Shifts Logged:</div>
+                <div class="value" id="totalShifts">0</div>
+            </div>
+            <div class="quick-stat-item">
+                <div class="label">Average Hours/Shift:</div>
+                <div class="value" id="avgHoursPerShift">0</div>
             </div>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="summary-section">
-            <div class="summary-card">
-                <h3>📅 This Week</h3>
-                <div class="summary-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="weekHours">0</div>
-                        <div class="stat-label">Hours</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="weekDays">0</div>
-                        <div class="stat-label">Days</div>
-                    </div>
-                </div>
-            </div>
-            <div class="summary-card">
-                <h3>📆 This Month</h3>
-                <div class="summary-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="monthHours">0</div>
-                        <div class="stat-label">Hours</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="monthDays">0</div>
-                        <div class="stat-label">Days</div>
-                    </div>
-                </div>
-            </div>
-            <div class="summary-card">
-                <h3>📊 Overall</h3>
-                <div class="summary-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalHours">0</div>
-                        <div class="stat-label">Hours</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalDays">0</div>
-                        <div class="stat-label">Days</div>
-                    </div>
+        <!-- OJT Time Settings -->
+        <div class="settings-section">
+            <div class="settings-title">OJT Time Settings</div>
+            <div class="settings-row">
+                <span style="font-weight: 500;">Target OJT Hours</span>
+                <input type="number" class="target-input" id="targetHoursInput" value="400" min="1">
+                <span class="settings-note">Set your required OJT hours</span>
+                <div class="settings-buttons">
+                    <button class="btn-save" onclick="updateTargetHours()">Save</button>
+                    <button class="btn-cancel" onclick="resetTargetHours()">Cancel</button>
                 </div>
             </div>
         </div>
 
-        <!-- Table Section - UPDATED with AM/PM columns -->
+        <!-- Shift History -->
         <div class="table-section">
             <div class="table-header">
-                <h2>📋 Time Entries</h2>
-                <div class="filter-group">
-                    <select id="filterDepartment" onchange="filterEntries()">
-                        <option value="">All Departments</option>
-                    </select>
-                    <input type="text" id="searchTrainee" placeholder="Search trainee..." onkeyup="filterEntries()">
-                </div>
+                <div>DATE</div>
+                <div>MORNING</div>
+                <div>AFTERNOON</div>
+                <div>OVERTIME</div>
+                <div>TOTAL</div>
+                <div>ACTIONS</div>
             </div>
-            <table id="entriesTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Trainee ⬍</th>
-                        <th onclick="sortTable(1)">Date ⬍</th>
-                        <th>🌅 Morning</th>
-                        <th>☀️ Afternoon</th>
-                        <th onclick="sortTable(2)">Total Hrs ⬍</th>
-                        <th onclick="sortTable(3)">Dept ⬍</th>
-                        <th>Supervisor</th>
-                        <th>Tasks</th>
-                        <th>Remarks</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-                <tfoot>
-                    <tr class="total-row">
-                        <td colspan="4"><strong>Total:</strong></td>
-                        <td id="totalHoursDisplay"><strong>0</strong></td>
-                        <td colspan="5"></td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div id="shiftsList">
+                <!-- Shifts will be inserted here -->
+                <div class="no-shifts">No shifts logged yet</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ==================== AUTHENTICATION SYSTEM ====================
-        let currentUser = null;
-        let entries = [];
+        // Store shifts
+        let shifts = JSON.parse(localStorage.getItem('ojt_shifts')) || [];
+        let targetHours = parseInt(localStorage.getItem('targetHours')) || 400;
 
-        // Initialize on page load
+        // Initialize
         window.onload = function() {
-            checkLoggedInUser();
-            setDefaultDate();
-            setupTimeListeners();
+            updateTargetDisplay();
+            renderShifts();
+            updateStats();
+            calculateDurations();
         };
 
-        function setupTimeListeners() {
-            // Update total hours preview when any time changes
-            ['morningIn', 'morningOut', 'afternoonIn', 'afternoonOut'].forEach(id => {
-                document.getElementById(id).addEventListener('change', updateTotalPreview);
-            });
-        }
-
-        function calculateSessionHours(timeIn, timeOut) {
+        function calculateHours(timeIn, timeOut) {
             if (!timeIn || !timeOut) return 0;
             
             const [inHours, inMinutes] = timeIn.split(':').map(Number);
@@ -972,578 +645,173 @@
                 minutes += 60;
             }
             
-            return hours + (minutes / 60);
+            return parseFloat((hours + minutes / 60).toFixed(2));
         }
 
-        function updateTotalPreview() {
+        function calculateDurations() {
             const morningIn = document.getElementById('morningIn').value;
             const morningOut = document.getElementById('morningOut').value;
             const afternoonIn = document.getElementById('afternoonIn').value;
             const afternoonOut = document.getElementById('afternoonOut').value;
-            
-            const morningHours = calculateSessionHours(morningIn, morningOut);
-            const afternoonHours = calculateSessionHours(afternoonIn, afternoonOut);
-            const total = morningHours + afternoonHours;
-            
-            document.getElementById('totalHoursPreview').textContent = total.toFixed(1);
+            const overtimeStart = document.getElementById('overtimeStart').value;
+            const overtimeEnd = document.getElementById('overtimeEnd').value;
+
+            const morningHours = calculateHours(morningIn, morningOut);
+            const afternoonHours = calculateHours(afternoonIn, afternoonOut);
+            const overtimeHours = calculateHours(overtimeStart, overtimeEnd);
+            const total = morningHours + afternoonHours + overtimeHours;
+
+            document.getElementById('morningDuration').textContent = morningHours.toFixed(2);
+            document.getElementById('afternoonDuration').textContent = afternoonHours.toFixed(2);
+            document.getElementById('overtimeDuration').textContent = overtimeHours.toFixed(2);
+            document.getElementById('totalShiftDuration').textContent = total.toFixed(2);
         }
 
-        function checkLoggedInUser() {
-            const savedUser = localStorage.getItem('ojt_current_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                loadUserData();
-                showApp();
-            } else {
-                showLogin();
-            }
-        }
-
-        // Login Handler
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const errorElement = document.getElementById('loginError');
-            
-            const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
-            
-            const user = users.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                currentUser = {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email
-                };
-                
-                localStorage.setItem('ojt_current_user', JSON.stringify(currentUser));
-                
-                loadUserData();
-                showApp();
-                errorElement.classList.remove('show');
-            } else {
-                errorElement.textContent = 'Invalid email or password';
-                errorElement.classList.add('show');
-            }
-        }
-
-        // Signup Handler
-        function handleSignup(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirm').value;
-            const errorElement = document.getElementById('signupError');
-            const successElement = document.getElementById('signupSuccess');
-            
-            if (password !== confirm) {
-                errorElement.textContent = 'Passwords do not match';
-                errorElement.classList.add('show');
-                successElement.classList.remove('show');
-                return;
-            }
-            
-            const users = JSON.parse(localStorage.getItem('ojt_users')) || [];
-            
-            if (users.some(u => u.email === email)) {
-                errorElement.textContent = 'Email already registered';
-                errorElement.classList.add('show');
-                successElement.classList.remove('show');
-                return;
-            }
-            
-            const newUser = {
-                id: Date.now().toString(),
-                name: name,
-                email: email,
-                password: password,
-                created: new Date().toISOString()
-            };
-            
-            users.push(newUser);
-            localStorage.setItem('ojt_users', JSON.stringify(users));
-            
-            successElement.textContent = 'Account created! You can now login.';
-            successElement.classList.add('show');
-            errorElement.classList.remove('show');
-            
-            document.getElementById('signupName').value = '';
-            document.getElementById('signupEmail').value = '';
-            document.getElementById('signupPassword').value = '';
-            document.getElementById('signupConfirm').value = '';
-            
-            setTimeout(() => {
-                switchTab('login');
-                successElement.classList.remove('show');
-            }, 2000);
-        }
-
-        // Logout Handler
-        function handleLogout() {
-            localStorage.removeItem('ojt_current_user');
-            currentUser = null;
-            showLogin();
-        }
-
-        // Load user-specific data
-        function loadUserData() {
-            if (!currentUser) return;
-            
-            const allEntries = JSON.parse(localStorage.getItem('ojt_all_entries')) || {};
-            entries = allEntries[currentUser.id] || [];
-            
-            updateUserInfo();
-            renderEntries();
-            updateSummaries();
-            updateDepartmentFilter();
-        }
-
-        // Save entries for current user
-        function saveEntries() {
-            if (!currentUser) return;
-            
-            const allEntries = JSON.parse(localStorage.getItem('ojt_all_entries')) || {};
-            allEntries[currentUser.id] = entries;
-            localStorage.setItem('ojt_all_entries', JSON.stringify(allEntries));
-        }
-
-        // Update user info in header
-        function updateUserInfo() {
-            if (currentUser) {
-                document.getElementById('userName').textContent = currentUser.name;
-                document.getElementById('userEmail').textContent = currentUser.email;
-                
-                const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                document.getElementById('userAvatar').textContent = initials;
-            }
-        }
-
-        // UI Helpers
-        function showLogin() {
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('appContainer').classList.remove('active');
-        }
-
-        function showApp() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('appContainer').classList.add('active');
-        }
-
-        function switchTab(tab) {
-            const tabs = document.querySelectorAll('.login-tab');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            
-            if (tab === 'login') {
-                tabs[0].classList.add('active');
-                tabs[1].classList.remove('active');
-                loginForm.classList.add('active');
-                signupForm.classList.remove('active');
-            } else {
-                tabs[0].classList.remove('active');
-                tabs[1].classList.add('active');
-                loginForm.classList.remove('active');
-                signupForm.classList.add('active');
-            }
-        }
-
-        // ==================== TRACKER FUNCTIONS ====================
-
-        function setDefaultDate() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date').value = today;
-        }
-
-        function toggleDeptMode(mode) {
-            const selectOption = document.querySelector('.dept-option:first-child');
-            const customOption = document.querySelector('.dept-option:last-child');
-            const deptSelect = document.getElementById('deptSelect');
-            const deptCustom = document.getElementById('deptCustom');
-            
-            if (mode === 'select') {
-                selectOption.classList.add('active');
-                customOption.classList.remove('active');
-                deptSelect.style.display = 'block';
-                deptCustom.classList.remove('active');
-                document.getElementById('department').required = true;
-            } else {
-                selectOption.classList.remove('active');
-                customOption.classList.add('active');
-                deptSelect.style.display = 'none';
-                deptCustom.classList.add('active');
-                document.getElementById('department').required = false;
-            }
-        }
-
-        function addEntry(event) {
-            event.preventDefault();
-
-            const traineeName = document.getElementById('traineeName').value;
-            const date = document.getElementById('date').value;
-            
-            // Get times
+        function saveShift() {
+            const date = document.getElementById('shiftDate').value;
             const morningIn = document.getElementById('morningIn').value;
             const morningOut = document.getElementById('morningOut').value;
             const afternoonIn = document.getElementById('afternoonIn').value;
             const afternoonOut = document.getElementById('afternoonOut').value;
-            
-            // Validate times
-            if (morningOut <= morningIn) {
-                alert('Morning Time Out must be after Morning Time In');
-                return;
-            }
-            
-            if (afternoonOut <= afternoonIn) {
-                alert('Afternoon Time Out must be after Afternoon Time In');
-                return;
-            }
-            
-            // Calculate hours
-            const morningHours = calculateSessionHours(morningIn, morningOut);
-            const afternoonHours = calculateSessionHours(afternoonIn, afternoonOut);
-            const totalHours = morningHours + afternoonHours;
-            
-            // Get department
-            let department;
-            if (document.getElementById('deptSelect').style.display !== 'none') {
-                department = document.getElementById('department').value;
-                if (!department) {
-                    alert('Please select a department');
-                    return;
-                }
-            } else {
-                department = document.getElementById('customDepartment').value;
-                if (!department) {
-                    alert('Please enter a department');
-                    return;
-                }
-            }
-            
-            const supervisor = document.getElementById('supervisor').value;
-            const tasks = document.getElementById('tasks').value;
-            const remarks = document.getElementById('remarks').value;
+            const overtimeStart = document.getElementById('overtimeStart').value;
+            const overtimeEnd = document.getElementById('overtimeEnd').value;
 
-            const newEntry = {
+            const morningHours = calculateHours(morningIn, morningOut);
+            const afternoonHours = calculateHours(afternoonIn, afternoonOut);
+            const overtimeHours = calculateHours(overtimeStart, overtimeEnd);
+            const total = morningHours + afternoonHours + overtimeHours;
+
+            if (total === 0) {
+                alert('Please enter valid shift times');
+                return;
+            }
+
+            const shift = {
                 id: Date.now(),
-                traineeName,
                 date,
-                morningIn,
-                morningOut,
-                afternoonIn,
-                afternoonOut,
+                morning: `${morningIn}-${morningOut}`,
+                afternoon: `${afternoonIn}-${afternoonOut}`,
+                overtime: overtimeStart && overtimeEnd ? `${overtimeStart}-${overtimeEnd}` : '--:--',
+                total: total.toFixed(2),
                 morningHours,
                 afternoonHours,
-                hours: totalHours,
-                department,
-                supervisor,
-                tasks,
-                remarks
+                overtimeHours,
+                timestamp: new Date().toISOString()
             };
 
-            entries.push(newEntry);
-            saveEntries();
-            renderEntries();
-            updateSummaries();
+            shifts.push(shift);
+            localStorage.setItem('ojt_shifts', JSON.stringify(shifts));
+            
+            renderShifts();
+            updateStats();
             resetForm();
-            setDefaultDate();
-            updateDepartmentFilter();
         }
 
-        function deleteEntry(id) {
-            if (confirm('Are you sure you want to delete this entry?')) {
-                entries = entries.filter(entry => entry.id !== id);
-                saveEntries();
-                renderEntries();
-                updateSummaries();
-                updateDepartmentFilter();
+        function deleteShift(id) {
+            if (confirm('Delete this shift?')) {
+                shifts = shifts.filter(s => s.id !== id);
+                localStorage.setItem('ojt_shifts', JSON.stringify(shifts));
+                renderShifts();
+                updateStats();
             }
         }
 
-        function editEntry(id) {
-            const entry = entries.find(e => e.id === id);
-            if (entry) {
-                document.getElementById('traineeName').value = entry.traineeName;
-                document.getElementById('date').value = entry.date;
-                document.getElementById('morningIn').value = entry.morningIn;
-                document.getElementById('morningOut').value = entry.morningOut;
-                document.getElementById('afternoonIn').value = entry.afternoonIn;
-                document.getElementById('afternoonOut').value = entry.afternoonOut;
+        function editShift(id) {
+            const shift = shifts.find(s => s.id === id);
+            if (shift) {
+                document.getElementById('shiftDate').value = shift.date;
                 
-                const deptSelect = document.getElementById('department');
-                const optionExists = Array.from(deptSelect.options).some(opt => opt.value === entry.department);
+                const [morningIn, morningOut] = shift.morning.split('-');
+                const [afternoonIn, afternoonOut] = shift.afternoon.split('-');
                 
-                if (optionExists) {
-                    toggleDeptMode('select');
-                    deptSelect.value = entry.department;
-                } else {
-                    toggleDeptMode('custom');
-                    document.getElementById('customDepartment').value = entry.department;
+                document.getElementById('morningIn').value = morningIn;
+                document.getElementById('morningOut').value = morningOut;
+                document.getElementById('afternoonIn').value = afternoonIn;
+                document.getElementById('afternoonOut').value = afternoonOut;
+                
+                if (shift.overtime !== '--:--') {
+                    const [otStart, otEnd] = shift.overtime.split('-');
+                    document.getElementById('overtimeStart').value = otStart;
+                    document.getElementById('overtimeEnd').value = otEnd;
                 }
                 
-                document.getElementById('supervisor').value = entry.supervisor;
-                document.getElementById('tasks').value = entry.tasks;
-                document.getElementById('remarks').value = entry.remarks || '';
-                
-                updateTotalPreview();
-                
-                deleteEntry(id);
+                calculateDurations();
+                deleteShift(id);
             }
+        }
+
+        function renderShifts() {
+            const container = document.getElementById('shiftsList');
+            container.innerHTML = '';
+
+            if (shifts.length === 0) {
+                container.innerHTML = '<div class="no-shifts">No shifts logged yet</div>';
+                return;
+            }
+
+            shifts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            shifts.forEach(shift => {
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <div>${shift.date}</div>
+                    <div>${shift.morning}</div>
+                    <div>${shift.afternoon}</div>
+                    <div>${shift.overtime}</div>
+                    <div><strong>${shift.total}</strong></div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="editShift(${shift.id})">✏️</button>
+                        <button class="delete-btn" onclick="deleteShift(${shift.id})">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function updateStats() {
+            const totalHours = shifts.reduce((sum, shift) => sum + parseFloat(shift.total), 0);
+            const remaining = Math.max(targetHours - totalHours, 0);
+            const progress = (totalHours / targetHours) * 100;
+            const avgHours = shifts.length > 0 ? (totalHours / shifts.length).toFixed(2) : 0;
+
+            document.getElementById('totalHoursCompleted').textContent = totalHours.toFixed(1);
+            document.getElementById('hoursRemaining').textContent = remaining.toFixed(1);
+            document.getElementById('progressPercent').textContent = progress.toFixed(1) + '%';
+            document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
+            document.getElementById('totalShifts').textContent = shifts.length;
+            document.getElementById('avgHoursPerShift').textContent = avgHours;
+        }
+
+        function updateTargetHours() {
+            const newTarget = parseInt(document.getElementById('targetHoursInput').value);
+            if (newTarget > 0) {
+                targetHours = newTarget;
+                localStorage.setItem('targetHours', targetHours);
+                updateTargetDisplay();
+                updateStats();
+                alert('Target hours updated!');
+            }
+        }
+
+        function resetTargetHours() {
+            document.getElementById('targetHoursInput').value = targetHours;
+        }
+
+        function updateTargetDisplay() {
+            document.getElementById('targetHours').textContent = targetHours;
+            document.getElementById('targetHoursInput').value = targetHours;
         }
 
         function resetForm() {
-            document.getElementById('timeForm').reset();
-            toggleDeptMode('select');
-            setDefaultDate();
+            document.getElementById('shiftDate').value = '2026-02-24';
             document.getElementById('morningIn').value = '08:00';
             document.getElementById('morningOut').value = '12:00';
             document.getElementById('afternoonIn').value = '13:00';
             document.getElementById('afternoonOut').value = '17:00';
-            updateTotalPreview();
-        }
-
-        function updateRequiredHours() {
-            const requiredHours = parseInt(document.getElementById('requiredHours').value) || 500;
-            localStorage.setItem('requiredHours', requiredHours);
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const requiredHours = parseInt(localStorage.getItem('requiredHours')) || 500;
-            const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
-            const percentage = Math.min((totalHours / requiredHours) * 100, 100);
-            
-            document.getElementById('completedHours').textContent = `${totalHours.toFixed(1)} / ${requiredHours}`;
-            document.getElementById('progressFill').style.width = `${percentage}%`;
-            document.getElementById('percentage').textContent = `${percentage.toFixed(1)}%`;
-        }
-
-        function updateSummaries() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = now.getMonth();
-            
-            const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay());
-            startOfWeek.setHours(0, 0, 0, 0);
-            
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-            endOfWeek.setHours(23, 59, 59, 999);
-
-            let weekHours = 0;
-            let weekDays = new Set();
-            let monthHours = 0;
-            let monthDays = new Set();
-            let totalHours = 0;
-            let totalDays = new Set();
-
-            entries.forEach(entry => {
-                const entryDate = new Date(entry.date);
-                
-                if (entryDate >= startOfWeek && entryDate <= endOfWeek) {
-                    weekHours += entry.hours;
-                    weekDays.add(entry.date);
-                }
-                
-                if (entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear) {
-                    monthHours += entry.hours;
-                    monthDays.add(entry.date);
-                }
-                
-                totalHours += entry.hours;
-                totalDays.add(entry.date);
-            });
-
-            document.getElementById('weekHours').textContent = weekHours.toFixed(1);
-            document.getElementById('weekDays').textContent = weekDays.size;
-            document.getElementById('monthHours').textContent = monthHours.toFixed(1);
-            document.getElementById('monthDays').textContent = monthDays.size;
-            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
-            document.getElementById('totalDays').textContent = totalDays.size;
-            document.getElementById('totalHoursDisplay').textContent = totalHours.toFixed(1);
-
-            updateProgress();
-        }
-
-        function updateDepartmentFilter() {
-            const departments = [...new Set(entries.map(e => e.department))].sort();
-            const filterSelect = document.getElementById('filterDepartment');
-            
-            const currentValue = filterSelect.value;
-            
-            filterSelect.innerHTML = '<option value="">All Departments</option>';
-            
-            departments.forEach(dept => {
-                const option = document.createElement('option');
-                option.value = dept;
-                option.textContent = dept;
-                filterSelect.appendChild(option);
-            });
-            
-            if (departments.includes(currentValue)) {
-                filterSelect.value = currentValue;
-            }
-        }
-
-        let currentFilter = { department: '', trainee: '' };
-        let currentSort = { column: 1, ascending: false };
-
-        function filterEntries() {
-            currentFilter.department = document.getElementById('filterDepartment').value;
-            currentFilter.trainee = document.getElementById('searchTrainee').value.toLowerCase();
-            renderEntries();
-        }
-
-        function sortTable(column) {
-            if (currentSort.column === column) {
-                currentSort.ascending = !currentSort.ascending;
-            } else {
-                currentSort.column = column;
-                currentSort.ascending = true;
-            }
-            renderEntries();
-        }
-
-        function renderEntries() {
-            let filteredEntries = entries.filter(entry => {
-                const matchDepartment = !currentFilter.department || entry.department === currentFilter.department;
-                const matchTrainee = !currentFilter.trainee || entry.traineeName.toLowerCase().includes(currentFilter.trainee);
-                return matchDepartment && matchTrainee;
-            });
-
-            filteredEntries.sort((a, b) => {
-                let aVal, bVal;
-                
-                switch(currentSort.column) {
-                    case 0: aVal = a.traineeName; bVal = b.traineeName; break;
-                    case 1: aVal = a.date; bVal = b.date; break;
-                    case 2: aVal = a.hours; bVal = b.hours; break;
-                    case 3: aVal = a.department; bVal = b.department; break;
-                    default: return 0;
-                }
-                
-                if (aVal < bVal) return currentSort.ascending ? -1 : 1;
-                if (aVal > bVal) return currentSort.ascending ? 1 : -1;
-                return 0;
-            });
-
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            filteredEntries.forEach(entry => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${entry.traineeName}</td>
-                    <td>${entry.date}</td>
-                    <td class="morning-badge">${entry.morningIn} - ${entry.morningOut}<br><small>(${entry.morningHours.toFixed(1)} hrs)</small></td>
-                    <td class="afternoon-badge">${entry.afternoonIn} - ${entry.afternoonOut}<br><small>(${entry.afternoonHours.toFixed(1)} hrs)</small></td>
-                    <td><strong>${entry.hours.toFixed(1)}</strong></td>
-                    <td>${entry.department}</td>
-                    <td>${entry.supervisor}</td>
-                    <td>${entry.tasks.substring(0, 30)}${entry.tasks.length > 30 ? '...' : ''}</td>
-                    <td>${entry.remarks || ''}</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editEntry(${entry.id})">✏️</button>
-                        <button class="action-btn" onclick="deleteEntry(${entry.id})">🗑️</button>
-                    </td>
-                `;
-            });
-
-            if (filteredEntries.length === 0) {
-                const row = tbody.insertRow();
-                row.innerHTML = '<td colspan="10" style="text-align: center; padding: 30px;">No entries found</td>';
-            }
-        }
-
-        // Export Functions
-        function exportToCSV() {
-            let csv = 'Trainee Name,Date,Morning In,Morning Out,Morning Hours,Afternoon In,Afternoon Out,Afternoon Hours,Total Hours,Department,Supervisor,Tasks,Remarks\n';
-            
-            entries.forEach(entry => {
-                csv += `"${entry.traineeName}","${entry.date}","${entry.morningIn}","${entry.morningOut}",${entry.morningHours.toFixed(1)},"${entry.afternoonIn}","${entry.afternoonOut}",${entry.afternoonHours.toFixed(1)},${entry.hours.toFixed(1)},"${entry.department}","${entry.supervisor}","${entry.tasks.replace(/"/g, '""')}","${entry.remarks || ''}"\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ojt-${currentUser.name}-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-        }
-
-        function exportSummaryPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            const totalHours = entries.reduce((sum, e) => sum + e.hours, 0);
-            const requiredHours = parseInt(localStorage.getItem('requiredHours')) || 500;
-            const percentage = (totalHours / requiredHours * 100).toFixed(1);
-            
-            doc.setFontSize(20);
-            doc.text('OJT Summary Report', 105, 20, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.text(`Trainee: ${currentUser.name}`, 20, 40);
-            doc.text(`Email: ${currentUser.email}`, 20, 50);
-            doc.text(`Total Hours: ${totalHours.toFixed(1)} / ${requiredHours} (${percentage}%)`, 20, 60);
-            doc.text(`Days Worked: ${new Set(entries.map(e => e.date)).size}`, 20, 70);
-            doc.text(`Total Entries: ${entries.length}`, 20, 80);
-            
-            // Add session breakdown
-            const avgMorning = entries.reduce((sum, e) => sum + e.morningHours, 0) / entries.length || 0;
-            const avgAfternoon = entries.reduce((sum, e) => sum + e.afternoonHours, 0) / entries.length || 0;
-            
-            doc.text(`Average Morning Hours: ${avgMorning.toFixed(1)}`, 20, 90);
-            doc.text(`Average Afternoon Hours: ${avgAfternoon.toFixed(1)}`, 20, 100);
-            
-            doc.save(`ojt-summary-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
-        }
-
-        function exportDetailedPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'mm', 'a4');
-            
-            doc.setFontSize(20);
-            doc.text('OJT Detailed Report', 150, 20, { align: 'center' });
-            
-            doc.setFontSize(10);
-            doc.text(`Trainee: ${currentUser.name}`, 20, 30);
-            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 37);
-            
-            const tableData = entries.map(entry => [
-                entry.date,
-                `${entry.morningIn}-${entry.morningOut}`,
-                entry.morningHours.toFixed(1),
-                `${entry.afternoonIn}-${entry.afternoonOut}`,
-                entry.afternoonHours.toFixed(1),
-                entry.hours.toFixed(1),
-                entry.department,
-                entry.supervisor
-            ]);
-            
-            doc.autoTable({
-                startY: 45,
-                head: [['Date', 'Morning', 'AM Hrs', 'Afternoon', 'PM Hrs', 'Total', 'Dept', 'Supervisor']],
-                body: tableData,
-                theme: 'striped',
-                headStyles: { fillColor: [102, 126, 234] },
-                columnStyles: {
-                    0: { cellWidth: 25 },
-                    1: { cellWidth: 30 },
-                    2: { cellWidth: 15 },
-                    3: { cellWidth: 30 },
-                    4: { cellWidth: 15 },
-                    5: { cellWidth: 15 },
-                    6: { cellWidth: 25 },
-                    7: { cellWidth: 25 }
-                }
-            });
-            
-            doc.save(`ojt-details-${currentUser.name}-${new Date().toISOString().split('T')[0]}.pdf`);
+            document.getElementById('overtimeStart').value = '';
+            document.getElementById('overtimeEnd').value = '';
+            calculateDurations();
         }
     </script>
 </body>
