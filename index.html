@@ -613,7 +613,7 @@
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="label">Total Hours Completed</div>
-                    <div class="value" id="totalHoursCompleted">0.0</div>
+                    <div class="value" id="totalHoursCompleted">0.00</div>
                     <div class="sub">hours logged</div>
                 </div>
                 <div class="stat-card">
@@ -623,7 +623,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="label">Hours Remaining</div>
-                    <div class="value" id="hoursRemaining">400.0</div>
+                    <div class="value" id="hoursRemaining">400.00</div>
                     <div class="sub">hours to go</div>
                 </div>
             </div>
@@ -632,7 +632,7 @@
             <div class="progress-section">
                 <div class="progress-header">
                     <span class="label">OJT Progress</span>
-                    <span class="percentage" id="progressPercent">0.0%</span>
+                    <span class="percentage" id="progressPercent">0.00%</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
@@ -727,7 +727,7 @@
                 </div>
                 <div class="quick-stat-item">
                     <div class="label">Average Hours/Shift:</div>
-                    <div class="value" id="avgHoursPerShift">0</div>
+                    <div class="value" id="avgHoursPerShift">0.00</div>
                 </div>
             </div>
 
@@ -736,7 +736,7 @@
                 <div class="settings-title">OJT Time Settings</div>
                 <div class="settings-row">
                     <span style="font-weight: 500;">Target OJT Hours</span>
-                    <input type="number" class="target-input" id="targetHoursInput" value="400" min="1">
+                    <input type="number" class="target-input" id="targetHoursInput" value="400" min="1" step="1">
                     <span class="settings-note">Set your required OJT hours</span>
                     <div class="settings-buttons">
                         <button class="btn-save" onclick="updateTargetHours()">Save</button>
@@ -772,44 +772,44 @@
                     </select>
                 </div>
                 <div class="summary-badge">
-                    <span>Total Week Hours:</span> <span id="weekTotalHours">0.0</span>
+                    <span>Total Week Hours:</span> <span id="weekTotalHours">0.00</span>
                 </div>
             </div>
 
             <div class="summary-grid">
                 <div class="summary-item">
                     <div class="period">Monday</div>
-                    <div class="hours" id="mondayHours">0.0</div>
+                    <div class="hours" id="mondayHours">0.00</div>
                     <div class="shift-count" id="mondayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Tuesday</div>
-                    <div class="hours" id="tuesdayHours">0.0</div>
+                    <div class="hours" id="tuesdayHours">0.00</div>
                     <div class="shift-count" id="tuesdayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Wednesday</div>
-                    <div class="hours" id="wednesdayHours">0.0</div>
+                    <div class="hours" id="wednesdayHours">0.00</div>
                     <div class="shift-count" id="wednesdayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Thursday</div>
-                    <div class="hours" id="thursdayHours">0.0</div>
+                    <div class="hours" id="thursdayHours">0.00</div>
                     <div class="shift-count" id="thursdayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Friday</div>
-                    <div class="hours" id="fridayHours">0.0</div>
+                    <div class="hours" id="fridayHours">0.00</div>
                     <div class="shift-count" id="fridayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Saturday</div>
-                    <div class="hours" id="saturdayHours">0.0</div>
+                    <div class="hours" id="saturdayHours">0.00</div>
                     <div class="shift-count" id="saturdayShifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Sunday</div>
-                    <div class="hours" id="sundayHours">0.0</div>
+                    <div class="hours" id="sundayHours">0.00</div>
                     <div class="shift-count" id="sundayShifts">0 shifts</div>
                 </div>
             </div>
@@ -817,7 +817,7 @@
             <div class="progress-section">
                 <div class="progress-header">
                     <span class="label">Week Progress</span>
-                    <span class="percentage" id="weekProgress">0%</span>
+                    <span class="percentage" id="weekProgress">0.00%</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="weekProgressFill" style="width: 0%"></div>
@@ -847,34 +847,34 @@
                     </select>
                 </div>
                 <div class="summary-badge">
-                    <span>Total Month Hours:</span> <span id="monthTotalHours">0.0</span>
+                    <span>Total Month Hours:</span> <span id="monthTotalHours">0.00</span>
                 </div>
             </div>
 
             <div class="summary-grid" style="grid-template-columns: repeat(5, 1fr);">
                 <div class="summary-item">
                     <div class="period">Week 1</div>
-                    <div class="hours" id="week1Hours">0.0</div>
+                    <div class="hours" id="week1Hours">0.00</div>
                     <div class="shift-count" id="week1Shifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Week 2</div>
-                    <div class="hours" id="week2Hours">0.0</div>
+                    <div class="hours" id="week2Hours">0.00</div>
                     <div class="shift-count" id="week2Shifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Week 3</div>
-                    <div class="hours" id="week3Hours">0.0</div>
+                    <div class="hours" id="week3Hours">0.00</div>
                     <div class="shift-count" id="week3Shifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Week 4</div>
-                    <div class="hours" id="week4Hours">0.0</div>
+                    <div class="hours" id="week4Hours">0.00</div>
                     <div class="shift-count" id="week4Shifts">0 shifts</div>
                 </div>
                 <div class="summary-item">
                     <div class="period">Week 5</div>
-                    <div class="hours" id="week5Hours">0.0</div>
+                    <div class="hours" id="week5Hours">0.00</div>
                     <div class="shift-count" id="week5Shifts">0 shifts</div>
                 </div>
             </div>
@@ -882,7 +882,7 @@
             <div class="quick-stats">
                 <div class="quick-stat-item">
                     <div class="label">Average Hours/Week</div>
-                    <div class="value" id="avgWeekHours">0.0</div>
+                    <div class="value" id="avgWeekHours">0.00</div>
                 </div>
                 <div class="quick-stat-item">
                     <div class="label">Total Days Worked</div>
@@ -939,6 +939,7 @@
                 minutes += 60;
             }
             
+            // Return with 2 decimal places
             return parseFloat((hours + minutes / 60).toFixed(2));
         }
 
@@ -1076,18 +1077,21 @@
             const totalHours = shifts.reduce((sum, shift) => sum + parseFloat(shift.total), 0);
             const remaining = Math.max(targetHours - totalHours, 0);
             const progress = (totalHours / targetHours) * 100;
-            const avgHours = shifts.length > 0 ? (totalHours / shifts.length).toFixed(2) : 0;
+            const avgHours = shifts.length > 0 ? (totalHours / shifts.length) : 0;
 
-            document.getElementById('totalHoursCompleted').textContent = totalHours.toFixed(1);
-            document.getElementById('hoursRemaining').textContent = remaining.toFixed(1);
-            document.getElementById('progressPercent').textContent = progress.toFixed(1) + '%';
+            document.getElementById('totalHoursCompleted').textContent = totalHours.toFixed(2);
+            document.getElementById('hoursRemaining').textContent = remaining.toFixed(2);
+            document.getElementById('progressPercent').textContent = progress.toFixed(2) + '%';
             document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
             document.getElementById('totalShifts').textContent = shifts.length;
-            document.getElementById('avgHoursPerShift').textContent = avgHours;
+            document.getElementById('avgHoursPerShift').textContent = avgHours.toFixed(2);
         }
 
         function populateWeekSelector() {
-            if (shifts.length === 0) return;
+            if (shifts.length === 0) {
+                document.getElementById('weekSelector').innerHTML = '<option value="">No weeks available</option>';
+                return;
+            }
             
             // Get all unique weeks from shifts
             const weeks = new Set();
@@ -1120,15 +1124,13 @@
 
         function updateWeeklySummary() {
             const selector = document.getElementById('weekSelector');
-            if (!selector.options.length) {
+            if (!selector.options.length || !selector.value) {
                 // No weeks available
                 resetWeeklyDisplay();
                 return;
             }
             
             const selectedWeekStart = selector.value;
-            if (!selectedWeekStart) return;
-            
             const startDate = new Date(selectedWeekStart);
             const endDate = new Date(startDate);
             endDate.setDate(startDate.getDate() + 6);
@@ -1148,28 +1150,28 @@
                 const dayHours = dayShifts.reduce((sum, s) => sum + parseFloat(s.total), 0);
                 const dayCount = dayShifts.length;
                 
-                document.getElementById(day.toLowerCase() + 'Hours').textContent = dayHours.toFixed(1);
+                document.getElementById(day.toLowerCase() + 'Hours').textContent = dayHours.toFixed(2);
                 document.getElementById(day.toLowerCase() + 'Shifts').textContent = dayCount + ' shift' + (dayCount !== 1 ? 's' : '');
                 
                 totalWeekHours += dayHours;
             });
             
-            document.getElementById('weekTotalHours').textContent = totalWeekHours.toFixed(1);
+            document.getElementById('weekTotalHours').textContent = totalWeekHours.toFixed(2);
             
             // Update week progress (based on 40-hour week)
             const weekProgress = (totalWeekHours / 40) * 100;
-            document.getElementById('weekProgress').textContent = weekProgress.toFixed(1) + '%';
+            document.getElementById('weekProgress').textContent = weekProgress.toFixed(2) + '%';
             document.getElementById('weekProgressFill').style.width = Math.min(weekProgress, 100) + '%';
         }
 
         function resetWeeklyDisplay() {
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
             days.forEach(day => {
-                document.getElementById(day.toLowerCase() + 'Hours').textContent = '0.0';
+                document.getElementById(day.toLowerCase() + 'Hours').textContent = '0.00';
                 document.getElementById(day.toLowerCase() + 'Shifts').textContent = '0 shifts';
             });
-            document.getElementById('weekTotalHours').textContent = '0.0';
-            document.getElementById('weekProgress').textContent = '0%';
+            document.getElementById('weekTotalHours').textContent = '0.00';
+            document.getElementById('weekProgress').textContent = '0.00%';
             document.getElementById('weekProgressFill').style.width = '0%';
         }
 
@@ -1198,16 +1200,16 @@
             let weeksWithData = 0;
             
             for (let i = 0; i < 5; i++) {
-                document.getElementById(`week${i+1}Hours`).textContent = weekHours[i].toFixed(1);
+                document.getElementById(`week${i+1}Hours`).textContent = weekHours[i].toFixed(2);
                 document.getElementById(`week${i+1}Shifts`).textContent = weekShifts[i] + ' shift' + (weekShifts[i] !== 1 ? 's' : '');
                 totalMonthHours += weekHours[i];
                 if (weekHours[i] > 0) weeksWithData++;
             }
             
-            document.getElementById('monthTotalHours').textContent = totalMonthHours.toFixed(1);
+            document.getElementById('monthTotalHours').textContent = totalMonthHours.toFixed(2);
             
             const avgWeekHours = weeksWithData > 0 ? totalMonthHours / weeksWithData : 0;
-            document.getElementById('avgWeekHours').textContent = avgWeekHours.toFixed(1);
+            document.getElementById('avgWeekHours').textContent = avgWeekHours.toFixed(2);
             document.getElementById('totalDaysMonth').textContent = monthShifts.length;
         }
 
