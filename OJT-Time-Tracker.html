@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OJT Time Tracker - Multi-User with Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+        }
+
+        .login-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .login-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .login-tab:not(.active):hover {
+            background: #f0f0f0;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+        }
+
+        .btn-google img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 10px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Main App Styles (existing styles with modifications) */
+        .app-container {
+            display: none;
+            padding: 20px;
+        }
+
+        .app-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .user-header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .user-details h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-details p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        /* Existing styles from previous version (keep all your existing CSS) */
+        /* ... (copy all the existing CSS from the previous version) ... */
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 50px 20px;
+                padding: 30px;
+            }
+            
+            .user-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <!-- Include Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Include jsPDF and autoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-header">
+            <h1>📊 OJT Tracker</h1>
+            <p>Sign in to track your training hours</p>
+        </div>
+
+        <div class="login-tabs">
+            <div class="login-tab active" onclick="switchTab('login')">Login</div>
+            <div class="login-tab" onclick="switchTab('signup')">Sign Up</div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form active" id="loginForm">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                        <span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span>
+                    </div>
+                </div>
+                <div class="error-message" id="loginError"></div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <button class="btn-google" onclick="handleGoogleLogin()">
+                <img src="https://www.google.com/favicon.ico" alt="Google"> Continue with Google
+            </button>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="login-form" id="signupForm">
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="Juan Dela Cruz">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="signupPassword" required placeholder="••••••••" minlength="6">
+                        <span class="toggle-password" onclick="togglePassword('signupPassword')">👁️</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <div class="password-input">
+                        <input type="password" id="signupConfirm" required placeholder="••••••••">
+                        <span class="toggle-password" onclick="togglePassword('signupConfirm')">👁️</span>
+                    </div>
+                </div>
+                <div class="error-message" id="signupError"></div>
+                <button type="submit" class="btn-login">Create Account</button>
+            </form>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <button class="btn-google" onclick="handleGoogleLogin()">
+                <img src="https://www.google.com/favicon.ico" alt="Google"> Continue with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until login) -->
+    <div class="app-container" id="appContainer">
+        <div class="user-header">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <div class="user-details">
+                    <h2 id="userName">Juan Dela Cruz</h2>
+                    <p id="userEmail">juan@example.com</p>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+
+        <!-- PASTE ALL YOUR EXISTING APP CONTENT HERE -->
+        <!-- Goal Section, Form Section, PDF Section, Summary Cards, Table Section -->
+        <!-- Copy everything from your previous version's app content -->
+        
+        <!-- Quick reminder of what to paste (use your existing HTML): -->
+        <!-- 
+        <div class="goal-section">...</div>
+        <div class="form-section">...</div>
+        <div class="pdf-section">...</div>
+        <div class="summary-section">...</div>
+        <div class="table-section">...</div>
+        -->
+    </div>
+
+    <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        // YOU NEED TO CREATE A FREE SUPABASE PROJECT AND REPLACE THESE VALUES
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Get from: https://app.supabase.com -> Project Settings -> API
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Get from same place
+        
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Global state
+        let currentUser = null;
+        let entries = [];
+
+        // ==================== AUTHENTICATION FUNCTIONS ====================
+        
+        // Check if user is already logged in
+        async function checkUser() {
+            showLoading();
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser();
+                if (user) {
+                    currentUser = user;
+                    await loadUserData();
+                    showApp();
+                } else {
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Error checking user:', error);
+                showLogin();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Handle login
+        async function handleLogin(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorElement = document.getElementById('loginError');
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) throw error;
+                
+                currentUser = data.user;
+                await loadUserData();
+                showApp();
+            } catch (error) {
+                errorElement.textContent = error.message;
+                errorElement.classList.add('show');
+                hideLoading();
+            }
+        }
+
+        // Handle signup
+        async function handleSignup(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+            const errorElement = document.getElementById('signupError');
+            
+            // Validate passwords match
+            if (password !== confirm) {
+                errorElement.textContent = 'Passwords do not match';
+                errorElement.classList.add('show');
+                hideLoading();
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name
+                        }
+                    }
+                });
+                
+                if (error) throw error;
+                
+                // Show success message
+                alert('Account created! Please check your email for verification.');
+                switchTab('login');
+            } catch (error) {
+                errorElement.textContent = error.message;
+                errorElement.classList.add('show');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Handle Google login
+        async function handleGoogleLogin() {
+            showLoading();
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                
+                if (error) throw error;
+                
+                // The page will redirect, so loading will stay on
+            } catch (error) {
+                alert('Google login failed: ' + error.message);
+                hideLoading();
+            }
+        }
+
+        // Handle logout
+        async function handleLogout() {
+            showLoading();
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                currentUser = null;
+                entries = [];
+                showLogin();
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // ==================== DATA FUNCTIONS ====================
+        
+        // Load user data from database
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            try {
+                // Get user's entries
+                const { data: userEntries, error } = await supabase
+                    .from('ojt_entries')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('date', { ascending: false });
+                
+                if (error) throw error;
+                
+                entries = userEntries || [];
+                
+                // Update UI
+                updateUserInfo();
+                renderEntries();
+                updateSummaries();
+                updateDepartmentFilter();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading your data. Please refresh.');
+            }
+        }
+
+        // Save new entry
+        async function saveEntryToDB(entry) {
+            if (!currentUser) return null;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('ojt_entries')
+                    .insert([{
+                        user_id: currentUser.id,
+                        trainee_name: entry.traineeName,
+                        date: entry.date,
+                        time_in: entry.timeIn,
+                        time_out: entry.timeOut,
+                        hours: entry.hours,
+                        department: entry.department,
+                        supervisor: entry.supervisor,
+                        tasks: entry.tasks,
+                        remarks: entry.remarks || ''
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                
+                return data[0];
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                alert('Failed to save entry: ' + error.message);
+                return null;
+            }
+        }
+
+        // Update entry
+        async function updateEntryInDB(id, updates) {
+            try {
+                const { error } = await supabase
+                    .from('ojt_entries')
+                    .update(updates)
+                    .eq('id', id)
+                    .eq('user_id', currentUser.id);
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Error updating entry:', error);
+                alert('Failed to update entry');
+                return false;
+            }
+        }
+
+        // Delete entry
+        async function deleteEntryFromDB(id) {
+            try {
+                const { error } = await supabase
+                    .from('ojt_entries')
+                    .delete()
+                    .eq('id', id)
+                    .eq('user_id', currentUser.id);
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+                alert('Failed to delete entry');
+                return false;
+            }
+        }
+
+        // ==================== UI FUNCTIONS ====================
+        
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('appContainer').classList.remove('active');
+        }
+
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+        }
+
+        function switchTab(tab) {
+            const loginTab = document.querySelectorAll('.login-tab');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (tab === 'login') {
+                loginTab[0].classList.add('active');
+                loginTab[1].classList.remove('active');
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                loginTab[0].classList.remove('active');
+                loginTab[1].classList.add('active');
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
+            }
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function updateUserInfo() {
+            if (currentUser) {
+                const name = currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User';
+                const email = currentUser.email || '';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                document.getElementById('userName').textContent = name;
+                document.getElementById('userEmail').textContent = email;
+                document.getElementById('userAvatar').textContent = initials;
+            }
+        }
+
+        // ==================== EXISTING FUNCTIONS ====================
+        // Copy all your existing functions here (addEntry, deleteEntry, etc.)
+        // But modify them to use the database functions above
+        
+        // Modified addEntry function
+        async function addEntry(event) {
+            event.preventDefault();
+            showLoading();
+
+            // Get form values (same as before)
+            const traineeName = document.getElementById('traineeName').value;
+            const date = document.getElementById('date').value;
+            const timeIn = document.getElementById('timeIn').value;
+            const timeOut = document.getElementById('timeOut').value;
+            
+            // Get department (same as before)
+            let department;
+            if (document.getElementById('deptSelect').style.display !== 'none') {
+                department = document.getElementById('department').value;
+            } else {
+                department = document.getElementById('customDepartment').value;
+            }
+            
+            const supervisor = document.getElementById('supervisor').value;
+            const tasks = document.getElementById('tasks').value;
+            const remarks = document.getElementById('remarks').value;
+
+            // Validate
+            if (timeOut <= timeIn) {
+                alert('Time Out must be after Time In');
+                hideLoading();
+                return;
+            }
+
+            const hours = calculateHours(timeIn, timeOut);
+
+            const newEntry = {
+                traineeName,
+                date,
+                timeIn,
+                timeOut,
+                hours,
+                department,
+                supervisor,
+                tasks,
+                remarks
+            };
+
+            // Save to database
+            const savedEntry = await saveEntryToDB(newEntry);
+            
+            if (savedEntry) {
+                // Add to local array with the database ID
+                entries.push({
+                    id: savedEntry.id,
+                    ...newEntry
+                });
+                
+                renderEntries();
+                updateSummaries();
+                resetForm();
+                setDefaultDate();
+                updateDepartmentFilter();
+            }
+            
+            hideLoading();
+        }
+
+        // Modified delete function
+        async function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                showLoading();
+                const success = await deleteEntryFromDB(id);
+                if (success) {
+                    entries = entries.filter(entry => entry.id !== id);
+                    renderEntries();
+                    updateSummaries();
+                    updateDepartmentFilter();
+                }
+                hideLoading();
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        
+        // Check user on page load
+        window.onload = function() {
+            checkUser();
+            setDefaultDate();
+            
+            // Handle OAuth redirect
+            const hash = window.location.hash;
+            if (hash && hash.includes('access_token')) {
+                showLoading();
+                // Supabase will handle the session automatically
+                setTimeout(() => {
+                    checkUser();
+                }, 1000);
+            }
+        };
+
+        // Copy all your other existing functions here:
+        // calculateHours, resetForm, setDefaultDate, updateRequiredHours,
+        // updateProgress, updateSummaries, filterEntries, sortTable,
+        // renderEntries, exportToCSV, showDatePicker, hideDatePicker,
+        // getFilteredEntriesByDate, exportSummaryPDF, exportDetailedPDF,
+        // exportTraineeReport, exportDepartmentReport, exportCustomDatePDF,
+        // toggleDeptMode, handleDeptChange, showDeptSuggestions, selectDeptSuggestion,
+        // quickSelectDept, updateDepartmentFilter
+        
+        // PASTE ALL YOUR EXISTING FUNCTIONS HERE
+    </script>
+</body>
+</html>
